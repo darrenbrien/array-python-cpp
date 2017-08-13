@@ -36,4 +36,11 @@ print("Test 6, Sum list: ", R1.sum_mat_ref(list5))
 list6 = np.array([[1, 2, 3], [4, 5, 6]])
 print("Test 7, Sum list: ", R1.ret_mat(list6))
 
+#Test8: Returning a dict of 1D numpy array from c++
+list6 = np.array([[1, 2, 3], [4, 5, 6]])
+print("Test 8, Sum list: ", R1.ret_map(list6))
+# This should work with any n-dimensional array
+
+#Test9: Returning a dict of 1D different type numpy array from c++
+print("Test 9, Sum list: ", R1.ret_map_uint())
 # This should work with any n-dimensional array

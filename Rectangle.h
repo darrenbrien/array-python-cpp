@@ -8,8 +8,9 @@ Adapted to include passing of multidimensional arrays
 */
 
 #include <vector>
+#include <map>
 #include <iostream>
-
+#include <stdint.h>
 namespace shapes {
     class Rectangle {
     public:
@@ -24,5 +25,7 @@ namespace shapes {
         double sum_mat(std::vector< std::vector<double> > sv);
         double sum_mat_ref(const std::vector< std::vector<double> > & sv);
         std::vector< std::vector<double> > ret_mat(std::vector< std::vector<double> > sv);
+	std::map< int, std::vector<double> > ret_map(std::vector< std::vector<double> > sv);
+	std::map< int, void* > ret_map();
     };
 }

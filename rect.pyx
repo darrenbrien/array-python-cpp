@@ -6,6 +6,9 @@
 #
 
 from libcpp.vector cimport vector
+from libcpp.map cimport map
+import numpy as np
+cimport numpy as np
 
 # c++ interface to cython
 cdef extern from "Rectangle.h" namespace "shapes":
@@ -20,6 +23,8 @@ cdef extern from "Rectangle.h" namespace "shapes":
         double sum_mat(vector[vector[double]])
         double sum_mat_ref(vector[vector[double]] &)
         vector[vector[double]] ret_mat(vector[vector[double]])
+        map[int, vector[double]] ret_map(vector[vector[double]])
+        map[int, void*] ret_map()
 
 # creating a cython wrapper class
 cdef class PyRectangle:
@@ -44,3 +49,11 @@ cdef class PyRectangle:
         return self.thisptr.sum_mat_ref(sv)
     def ret_mat(self, sv):
         return self.thisptr.ret_mat(sv)
+    def ret_map(self, sv):
+        return self.thisptr.ret_map(sv)
+    def ret_map_uint(self):
+        result = self.thisptr.ret_map()
+        floats = np.asarray(<np.float64_t[:4]> result[0])
+        ints = np.asarray(<np.int32_t[:4]> result[1])
+        return {0 : floats, 1 : ints}
+       

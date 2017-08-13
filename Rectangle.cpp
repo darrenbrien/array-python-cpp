@@ -114,6 +114,22 @@ return tot;
 
 }
 
+std::map< int, std::vector<double> > Rectangle::ret_map(std::vector< std::vector<double> > sv)
+{
+
+std::map<int, std::vector<double> > map;
+int svrows = sv.size();
+int svcols = sv[0].size();
+
+std::cout << "vector length " << svrows << " , " << svcols << std::endl;
+
+for (int ii=0; ii<svrows; ii++)
+{
+	map[ii] = sv[ii];
+}        
+return map;
+
+}
 
 /*
 Inputting a 2D vector, performing a simple operation and returning a new 2D vector
@@ -140,3 +156,37 @@ for (int ii=0; ii<svrows; ii++)
 return tot;
 
 }
+
+
+std::map< int, void* > Rectangle::ret_map()
+{
+
+std::map<int, void* > map;
+int svrows = 2;
+
+std::cout << "vector length " << svrows << " , " << 4 << std::endl;
+
+for (int ii=0; ii<svrows; ii++)
+{
+	if(ii %2 == 0){
+		double myints[] = {16.1,2.2,77.42514,14235229.92392928238};
+  		std::vector<double> vector (myints, myints + sizeof(myints) / sizeof(double) );
+		map[ii] = reinterpret_cast<void*>(&vector[0]);
+		std::cout << vector[0] << ' ' << vector[1] << ' ' << vector[2] << ' ' << vector[3] << ' ' << ':' << std::endl;
+	}
+	else{
+		int myints[] = {16,2,77,29};
+  		std::vector<int32_t> vector (myints, myints + sizeof(myints) / sizeof(int32_t) );
+		void* p = reinterpret_cast<void*>(&vector[0]);
+		map[ii] = p;
+		int32_t *x;
+		x = reinterpret_cast<int32_t*>(p); 
+		std::cout << vector[0] << ' ' << vector[1] << ' ' << vector[2] << ' ' << vector[3] << ' ' << ':' << std::endl;
+		std::cout << x[0] << ' ' << x[1] << ' ' << x[2] << ' ' << x[3] << ' ' << ':' << std::endl;
+	}
+}        
+return map;
+
+}
+
+
