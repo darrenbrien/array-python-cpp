@@ -125,7 +125,11 @@ std::cout << "vector length " << svrows << " , " << svcols << std::endl;
 
 for (int ii=0; ii<svrows; ii++)
 {
-	map[ii] = sv[ii];
+	std::vector<double> vec;
+	for(int j = 0; j < svcols; j++){
+		vec.push_back(ii +  j *.3);
+	}
+	map[ii] = vec;
 }        
 return map;
 
@@ -161,23 +165,27 @@ return tot;
 std::map< int, void* > Rectangle::ret_map()
 {
 
-std::map<int, void* > map;
 int svrows = 2;
 
 std::cout << "vector length " << svrows << " , " << 4 << std::endl;
 
+std::map<int, void* > map;
 for (int ii=0; ii<svrows; ii++)
 {
 	if(ii %2 == 0){
-		double myints[] = {16.1,2.2,77.42514,14235229.92392928238};
-  		std::vector<double> vector (myints, myints + sizeof(myints) / sizeof(double) );
+  		std::vector<double> vector; 
+		for(int i =0; i < 100; i++){
+			vector.push_back(i + .0);
+		}
 		map[ii] = reinterpret_cast<void*>(&vector[0]);
 		std::cout << vector[0] << ' ' << vector[1] << ' ' << vector[2] << ' ' << vector[3] << ' ' << ':' << std::endl;
 	}
 	else{
-		int myints[] = {16,2,77,29};
-  		std::vector<int32_t> vector (myints, myints + sizeof(myints) / sizeof(int32_t) );
-		void* p = reinterpret_cast<void*>(&vector[0]);
+  		std::vector<int32_t> vector;
+		for(int i =0; i < 100; i++){
+			vector.push_back(i);
+		}
+		void* p = reinterpret_cast<void*>(&vector.front());
 		map[ii] = p;
 		int32_t *x;
 		x = reinterpret_cast<int32_t*>(p); 
@@ -188,5 +196,4 @@ for (int ii=0; ii<svrows; ii++)
 return map;
 
 }
-
 

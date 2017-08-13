@@ -53,7 +53,6 @@ cdef class PyRectangle:
         return self.thisptr.ret_map(sv)
     def ret_map_uint(self):
         result = self.thisptr.ret_map()
-        floats = np.asarray(<np.float64_t[:4]> result[0])
-        ints = np.asarray(<np.int32_t[:4]> result[1])
+        floats = np.asarray(<np.float64_t[:100]> result[0])
+        ints = np.asarray(<np.int32_t[:100]> result[1])
         return {0 : floats, 1 : ints}
-       
