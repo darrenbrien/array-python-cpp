@@ -25,12 +25,21 @@ cdef extern from "Rectangle.h" namespace "shapes":
         vector[vector[double]] ret_mat(vector[vector[double]])
         map[int, vector[double]] ret_map(vector[vector[double]])
         #map[int, Column*] ret_map()
-'''
+
 # c++ interface to cython
 cdef extern from "Column.h" namespace "shapes":
   cdef cppclass Column:
         Column(int) except +
-'''
+
+# c++ interface to cython
+cdef extern from "IntegerColumn.h" namespace "shapes":
+  cdef cppclass IntegerColumn:
+        IntegerColumn(int) except +
+
+# c++ interface to cython
+cdef extern from "Column.h" namespace "shapes":
+  cdef cppclass DoubleColumn:
+        DoubleColumn(int) except +
 
 # creating a cython wrapper class
 cdef class PyRectangle:
