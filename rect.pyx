@@ -11,6 +11,8 @@ cimport numpy as np
 from column cimport ColumnBase
 from column cimport Column
 from cython cimport view
+from libc.stdlib cimport malloc, free
+from cpython.mem cimport PyMem_Malloc, PyMem_Realloc, PyMem_Free
 
 # c++ interface to cython
 cdef extern from "Rectangle.h" namespace "shapes":
@@ -26,6 +28,7 @@ cdef extern from "Rectangle.h" namespace "shapes":
         double sum_mat_ref(vector[vector[double]] &)
         vector[vector[double]] ret_mat(vector[vector[double]])
         vector[ColumnBase*] ret_map()
+        void tidy(vector[ColumnBase*])
 
 # creating a cython wrapper class
 cdef class PyRectangle:
@@ -55,19 +58,26 @@ cdef class PyRectangle:
         d = {}
         for column in result:
             d[column.getName().decode('utf8')] = to_numpy(column)
+        self.thisptr.tidy(result)
         return(d)
 
 cdef to_numpy(ColumnBase* i):
     if i.getType() == 101:
-        return np.asarray(<np.float64_t[:(<Column[np.float64_t]*> i).vec.size()]> &(<Column[np.float64_t]*> i).vec[0])
+        return create_floats(<Column[np.float64_t]*> i) 
     if i.getType() == 202:
         return create_ints(<Column[np.int32_t]*> i)
 
 cdef create_ints(Column[np.int32_t]* col):
-    cdef view.array ints = <np.int32_t[:col.vec.size()]> &col.vec[0]
-    #ints.callback_free_data = lambda 
-    return np.asarray(ints)
+    cdef view.array data = <np.int32_t[:col.vec.size()]> &col.vec[0]    
+    result = np.asarray(data.copy())
+    #col.dispose()
+    return result
 
+cdef create_floats(Column[np.float64_t]* col):
+    cdef view.array data = <np.float64_t[:col.vec.size()]> &col.vec[0]    
+    result = np.asarray(data.copy())
+    #col.dispose()
+    return result
 
 
 
