@@ -57,8 +57,8 @@ cdef class PyRectangle:
         result = self.thisptr.ret_map()
         d = {}
         for column in result:
-            d[column.getName().decode('utf8')] = to_numpy(column)
-        self.thisptr.tidy(result)
+            name = column.getName().decode('utf8')
+            d[name] = to_numpy(column)
         return(d)
 
 cdef to_numpy(ColumnBase* i):
@@ -70,13 +70,15 @@ cdef to_numpy(ColumnBase* i):
 cdef create_ints(Column[np.int32_t]* col):
     cdef view.array data = <np.int32_t[:col.vec.size()]> &col.vec[0]    
     result = np.asarray(data.copy())
-    #col.dispose()
+    del data
+    col.dispose()
     return result
 
 cdef create_floats(Column[np.float64_t]* col):
     cdef view.array data = <np.float64_t[:col.vec.size()]> &col.vec[0]    
     result = np.asarray(data.copy())
-    #col.dispose()
+    del data
+    col.dispose()
     return result
 
 

@@ -31,9 +31,11 @@ class Column : public ColumnBase {
    	
       }
 	
-      virtual ~Column(){}
+      virtual ~Column(){
+      }
+      
       void dispose(){
-          delete this;
+	  delete this;
       }
 };
 #endif

@@ -40,5 +40,8 @@ print("Test 7, Sum list: ", R1.ret_mat(list6))
 #Test9: Returning a dict of 1D different type numpy array from c++
 for i in range(10):
 	d = R1.ret_map_uint()
-	print(pd.DataFrame.from_dict(d))
+	df = pd.DataFrame.from_dict(d)
+	print(df)
+	del df
+	del d
 
