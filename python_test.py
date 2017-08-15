@@ -41,4 +41,12 @@ print("Test 7, Sum list: ", R1.ret_mat(list6))
 for i in range(10):
 	d = R1.ret_map_uint()
 	print(pd.DataFrame(d))
+	del d
+
+print('sleeping')
+time.sleep(10)
+print('removing r1')
+del R1
+time.sleep(10)
+print('done')
 # This should work with any n-dimensional array
