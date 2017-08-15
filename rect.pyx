@@ -4,11 +4,12 @@
 # Cython interface file for wrapping the object
 #
 #
-
+from libcpp.string cimport string
 from libcpp.vector cimport vector
 from libcpp.map cimport map
 import numpy as np
 cimport numpy as np
+from column cimport ColumnBase
 
 # c++ interface to cython
 cdef extern from "Rectangle.h" namespace "shapes":
@@ -24,7 +25,7 @@ cdef extern from "Rectangle.h" namespace "shapes":
         double sum_mat_ref(vector[vector[double]] &)
         vector[vector[double]] ret_mat(vector[vector[double]])
         map[int, vector[double]] ret_map(vector[vector[double]])
-        map[int, void*] ret_map()
+        map[int, ColumnBase*] ret_map()
 
 # creating a cython wrapper class
 cdef class PyRectangle:
@@ -50,9 +51,14 @@ cdef class PyRectangle:
     def ret_mat(self, sv):
         return self.thisptr.ret_mat(sv)
     def ret_map(self, sv):
-        return self.thisptr.ret_map(sv)
+        cdef map[int, vector[double]] result = self.thisptr.ret_map(sv)
+        print result
+        d = {}
+        for it in result:
+            d[it.first] = np.asarray(<np.float64_t[:it.second.size()]> &it.second[0])
+        print d
+        return d
     def ret_map_uint(self):
         result = self.thisptr.ret_map()
-        floats = np.asarray(<np.float64_t[:100]> result[0])
-        ints = np.asarray(<np.int32_t[:100]> result[1])
-        return {0 : floats, 1 : ints}
+        return None
+
