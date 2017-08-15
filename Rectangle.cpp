@@ -171,14 +171,14 @@ std::vector<ColumnBase* > cols;
 for (int ii=0; ii<svrows; ii++)
 {
 	if(ii %2 == 0){
-		Column<double> * col = new Column<double>("double", 101);
+		Column<double> * col = new Column<double>(SSTR(ii), 101);
 		for(int i =0; i < 10000; i++){
 			col->vec.push_back(i + .0);
 		}
 		cols.push_back(reinterpret_cast<ColumnBase*>(col));
 	}
 	else{
-		Column<int> * col = new Column<int>("int", 202);
+		Column<int> * col = new Column<int>(SSTR(ii), 202);
 		for(int i =0; i < 10000; i++){
 			col->vec.push_back(i);
 		}

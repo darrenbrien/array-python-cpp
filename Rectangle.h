@@ -9,9 +9,13 @@ Adapted to include passing of multidimensional arrays
 
 #include <vector>
 #include <map>
+#include <string>
 #include <iostream>
 #include <stdint.h>
 #include "Column.cpp"
+#include <sstream>
+
+#define SSTR( x ) static_cast< std::ostringstream & >( ( std::ostringstream() << std::dec << x ) ).str()
 namespace shapes {
     class Rectangle {
     public:

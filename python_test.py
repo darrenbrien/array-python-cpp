@@ -4,6 +4,7 @@ from __future__ import print_function
 import time
 import numpy as np
 from rect import PyRectangle
+import pandas as pd
 
 # Initialising the wrapped c++ function
 R1 = PyRectangle(0, 0, 9, 9);
@@ -36,13 +37,8 @@ print("Test 6, Sum list: ", R1.sum_mat_ref(list5))
 list6 = np.array([[1, 2, 3], [4, 5, 6]])
 print("Test 7, Sum list: ", R1.ret_mat(list6))
 
-#Test8: Returning a dict of 1D numpy array from c++
-list6 = np.array([[1, 2, 3], [4, 5, 6]])
-print("Test 8, Sum list: ", R1.ret_map())
-# This should work with any n-dimensional array
-
 #Test9: Returning a dict of 1D different type numpy array from c++
 for i in range(10):
-	print("Test 9, Sum list: ", R1.ret_map_uint())
-	time.sleep(5)
+	d = R1.ret_map_uint()
+	print(pd.DataFrame(d))
 # This should work with any n-dimensional array
