@@ -190,3 +190,9 @@ return cols;
 
 }
 
+void Rectangle::tidy(std::vector<ColumnBase*> cols){
+        for (size_t i =0; i < cols.size(); i++){
+                delete cols[i];
+        }
+}
+
