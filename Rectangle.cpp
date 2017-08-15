@@ -140,12 +140,10 @@ return tot;
 
 }
 
-std::map< int, std::vector<double> > Rectangle::ret_map(std::vector< std::vector<double> > sv)
+std::map< int, std::vector<double> > Rectangle::ret_map(std::map<int, std::vector<double> > & map)
 {
-
-std::map<int, std::vector<double> > map;
-int svrows = sv.size();
-int svcols = sv[0].size();
+int svrows = 2; 
+int svcols = 3;
 
 std::cout << "vector length " << svrows << " , " << svcols << std::endl;
 
@@ -155,6 +153,7 @@ for (int ii=0; ii<svrows; ii++)
 	for(int j = 0; j < svcols; j++){
 		vec.push_back(ii +  j *.3);
 	}
+	std::cout << "first elem:" << vec[0] << std::endl;
 	map[ii] = vec;
 }        
 return map;
@@ -163,30 +162,30 @@ return map;
 
 
 
-std::map< int, ColumnBase* > Rectangle::ret_map()
+std::vector<ColumnBase* > Rectangle::ret_map()
 {
 
-int svrows = 2;
+int svrows = 10000;
 
-std::map<int, ColumnBase* > map;
+std::vector<ColumnBase* > cols;
 for (int ii=0; ii<svrows; ii++)
 {
 	if(ii %2 == 0){
 		Column<double> * col = new Column<double>("double", 101);
-		for(int i =0; i < 100; i++){
+		for(int i =0; i < 10000; i++){
 			col->vec.push_back(i + .0);
 		}
-		map[ii] = reinterpret_cast<ColumnBase*>(col);
+		cols.push_back(reinterpret_cast<ColumnBase*>(col));
 	}
 	else{
 		Column<int> * col = new Column<int>("int", 202);
-		for(int i =0; i < 100; i++){
+		for(int i =0; i < 10000; i++){
 			col->vec.push_back(i);
 		}
-		map[ii] = reinterpret_cast<ColumnBase*>(col);
+		cols.push_back(reinterpret_cast<ColumnBase*>(col));
 	}
 }        
-return map;
+return cols;
 
 }
 

@@ -15,6 +15,14 @@ cdef extern from "Column.cpp":
     cdef cppclass ColumnBase:
         ColumnBase(string name, int type) except +
         int getType()
+        string getName()
+
+cdef extern from "Column.cpp": 
+    cdef cppclass Column[T]:
+        Column(string name, int type) except +
+        int getType()
+        string getName()
+        vector[T] vec
 
 # creating a cython wrapper class
 cdef class PyColumnBase:
@@ -23,5 +31,7 @@ cdef class PyColumnBase:
         self.thisptr = new ColumnBase(name, t)
     def __dealloc__(self):
         del self.thisptr
-    def ret_map_uint(self):
+    def getType(self):
+        return self.getType()
+    def getName(self):
         return self.getType()

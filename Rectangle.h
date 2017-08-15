@@ -26,7 +26,7 @@ namespace shapes {
         double sum_mat(std::vector< std::vector<double> > sv);
         double sum_mat_ref(const std::vector< std::vector<double> > & sv);
         std::vector< std::vector<double> > ret_mat(std::vector< std::vector<double> > sv);
-	std::map< int, std::vector<double> > ret_map(std::vector< std::vector<double> > sv);
-	std::map< int, ColumnBase* > ret_map();
+	std::map< int, std::vector<double> > ret_map(std::map<int, std::vector<double> > & sv);
+	std::vector<ColumnBase* > ret_map();
     };
 }

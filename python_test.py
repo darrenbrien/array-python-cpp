@@ -1,7 +1,7 @@
 # Python running example
 
 from __future__ import print_function
-
+import time
 import numpy as np
 from rect import PyRectangle
 
@@ -38,9 +38,11 @@ print("Test 7, Sum list: ", R1.ret_mat(list6))
 
 #Test8: Returning a dict of 1D numpy array from c++
 list6 = np.array([[1, 2, 3], [4, 5, 6]])
-print("Test 8, Sum list: ", R1.ret_map(list6))
+print("Test 8, Sum list: ", R1.ret_map())
 # This should work with any n-dimensional array
 
 #Test9: Returning a dict of 1D different type numpy array from c++
-print("Test 9, Sum list: ", R1.ret_map_uint())
+for i in range(10):
+	print("Test 9, Sum list: ", R1.ret_map_uint())
+	time.sleep(5)
 # This should work with any n-dimensional array

@@ -10,6 +10,7 @@ from libcpp.map cimport map
 import numpy as np
 cimport numpy as np
 from column cimport ColumnBase
+from column cimport Column
 
 # c++ interface to cython
 cdef extern from "Rectangle.h" namespace "shapes":
@@ -24,8 +25,8 @@ cdef extern from "Rectangle.h" namespace "shapes":
         double sum_mat(vector[vector[double]])
         double sum_mat_ref(vector[vector[double]] &)
         vector[vector[double]] ret_mat(vector[vector[double]])
-        map[int, vector[double]] ret_map(vector[vector[double]])
-        map[int, ColumnBase*] ret_map()
+        map[int, vector[double]] ret_map(map[int, vector[double]] &)
+        vector[ColumnBase*] ret_map()
 
 # creating a cython wrapper class
 cdef class PyRectangle:
@@ -50,15 +51,25 @@ cdef class PyRectangle:
         return self.thisptr.sum_mat_ref(sv)
     def ret_mat(self, sv):
         return self.thisptr.ret_mat(sv)
-    def ret_map(self, sv):
-        cdef map[int, vector[double]] result = self.thisptr.ret_map(sv)
+    def ret_map(self):
+        cdef map[int, vector[double]] *a_map = new map[int, vector[double]]()
+        result = self.thisptr.ret_map(a_map[0])
         print result
+        print a_map[0]
         d = {}
         for it in result:
+            print it.second
             d[it.first] = np.asarray(<np.float64_t[:it.second.size()]> &it.second[0])
         print d
         return d
     def ret_map_uint(self):
         result = self.thisptr.ret_map()
-        return None
+        d = {}
+        for i in result:
+            if i.getType() == 101:
+                d[i.getName()] = np.asarray(<np.float64_t[:(<Column[np.float64_t]*> i).vec.size()]> &(<Column[np.float64_t]*> i).vec[0])
+            if i.getType() == 202:
+                d[i.getName()] = np.asarray(<np.int64_t[:(<Column[np.int64_t]*> i).vec.size()]> &(<Column[np.int64_t]*> i).vec[0])
+        print d
+        return d
 
