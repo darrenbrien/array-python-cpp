@@ -6,12 +6,11 @@
 #
 from libcpp.string cimport string
 from libcpp.vector cimport vector
-from libcpp.map cimport map
 import numpy as np
 cimport numpy as np
 from column cimport ColumnBase
 from column cimport Column
-from cython.view cimport array as cvarray
+from cython cimport view
 
 # c++ interface to cython
 cdef extern from "Rectangle.h" namespace "shapes":
@@ -54,9 +53,14 @@ cdef class PyRectangle:
     def ret_map_uint(self):
         result = self.thisptr.ret_map()
         d = {}
-        for i in result:
-            if i.getType() == 101:                
-                d[i.getName().decode('utf-8')] = np.asarray(<np.float64_t[:(<Column[np.float64_t]*> i).vec.size()]> &(<Column[np.float64_t]*> i).vec[0])
-            if i.getType() == 202:
-                d[i.getName().decode('utf-8')] = np.asarray(<np.int32_t[:(<Column[np.int32_t]*> i).vec.size()]> &(<Column[np.int32_t]*> i).vec[0])
+        for column in result:
+            d[column.getName().decode('utf8')] = to_numpy(column)
         return(d)
+
+cdef to_numpy(ColumnBase* i):
+    if i.getType() == 101:
+        return np.asarray(<np.float64_t[:(<Column[np.float64_t]*> i).vec.size()]> &(<Column[np.float64_t]*> i).vec[0])
+    if i.getType() == 202:
+        return np.asarray(<np.int32_t[:(<Column[np.int32_t]*> i).vec.size()]> &(<Column[np.int32_t]*> i).vec[0])
+
+
