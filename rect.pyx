@@ -61,6 +61,18 @@ cdef to_numpy(ColumnBase* i):
     if i.getType() == 101:
         return np.asarray(<np.float64_t[:(<Column[np.float64_t]*> i).vec.size()]> &(<Column[np.float64_t]*> i).vec[0])
     if i.getType() == 202:
-        return np.asarray(<np.int32_t[:(<Column[np.int32_t]*> i).vec.size()]> &(<Column[np.int32_t]*> i).vec[0])
+        return create_ints(<Column[np.int32_t]*> i)
+
+cdef create_ints(Column[np.int32_t]* col):
+    cdef view.array ints = <np.int32_t[:col.vec.size()]> &col.vec[0]
+    #ints.callback_free_data = lambda 
+    return np.asarray(ints)
+
+
+
+
+
+
+
 
 
