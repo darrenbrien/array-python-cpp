@@ -13,3 +13,4 @@ cdef extern from "Column.cpp":
         int getType()
         string getName()
         vector[T] vec
+        void SayGoodbye()

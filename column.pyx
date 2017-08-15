@@ -23,15 +23,5 @@ cdef extern from "Column.cpp":
         int getType()
         string getName()
         vector[T] vec
+        void SayGoodbye()
 
-# creating a cython wrapper class
-cdef class PyColumnBase:
-    cdef ColumnBase *thisptr      # hold a C++ instance which we're wrapping
-    def __cinit__(self, string name, int t):
-        self.thisptr = new ColumnBase(name, t)
-    def __dealloc__(self):
-        del self.thisptr
-    def getType(self):
-        return self.getType()
-    def getName(self):
-        return self.getType()

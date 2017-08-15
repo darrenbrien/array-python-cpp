@@ -164,17 +164,18 @@ return map;
 
 std::vector<ColumnBase* > Rectangle::ret_map()
 {
-
 int svrows = 10000;
 
 std::vector<ColumnBase* > cols;
 for (int ii=0; ii<svrows; ii++)
 {
+	boost::shared_ptr<ColumnBase> up;
 	if(ii %2 == 0){
 		Column<double> * col = new Column<double>(SSTR(ii), 101);
 		for(int i =0; i < 10000; i++){
 			col->vec.push_back(i + .0);
 		}
+		
 		cols.push_back(reinterpret_cast<ColumnBase*>(col));
 	}
 	else{

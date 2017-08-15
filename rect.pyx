@@ -56,7 +56,9 @@ cdef class PyRectangle:
         for i in result:
             if i.getType() == 101:
                 d[i.getName().decode('utf-8')] = np.asarray(<np.float64_t[:(<Column[np.float64_t]*> i).vec.size()]> &(<Column[np.float64_t]*> i).vec[0])
+                (<Column[np.float64_t]*> i).SayGoodbye()
             if i.getType() == 202:
                 d[i.getName().decode('utf-8')] = np.asarray(<np.int32_t[:(<Column[np.int32_t]*> i).vec.size()]> &(<Column[np.int32_t]*> i).vec[0])
+                (<Column[np.int32_t]*> i).SayGoodbye()
         return(d)
 

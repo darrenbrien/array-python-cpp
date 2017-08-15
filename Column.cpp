@@ -32,5 +32,8 @@ class Column : public ColumnBase {
       }
 	
       virtual ~Column(){}
+      void SayGoodbye(){
+          delete this;
+      }
 };
 #endif

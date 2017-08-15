@@ -14,6 +14,7 @@ Adapted to include passing of multidimensional arrays
 #include <stdint.h>
 #include "Column.cpp"
 #include <sstream>
+#include <boost/shared_ptr.hpp>
 
 #define SSTR( x ) static_cast< std::ostringstream & >( ( std::ostringstream() << std::dec << x ) ).str()
 namespace shapes {
