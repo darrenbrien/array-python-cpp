@@ -60,8 +60,3 @@ cdef class PyRectangle:
             if i.getType() == 202:
                 d[i.getName().decode('utf-8')] = np.asarray(<np.int32_t[:(<Column[np.int32_t]*> i).vec.size()]> &(<Column[np.int32_t]*> i).vec[0])
         return(d)
-'''
-    def copy_int(self, int[] vec):
-        cdef int[:] view = vec
-        return view.copy()
-'''
