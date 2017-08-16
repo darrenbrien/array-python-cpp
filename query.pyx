@@ -34,20 +34,50 @@ cdef to_dict(vector[ColumnBase*] cols):
 
 cdef to_numpy(ColumnBase* i):
     if i.getType() == 101:
-        return create_floats(<Column[np.float64_t]*> i) 
-    if i.getType() == 202:
-        return create_ints(<Column[np.int32_t]*> i)
+        return create_bool(<Column[np.int8_t]*> i)
+    elif i.getType() == 102:
+        return create_int32(<Column[np.int32_t]*> i)
+    elif i.getType() == 103:
+        return create_int64(<Column[np.int64_t]*> i) 
+    elif i.getType() == 104:
+        return create_float64(<Column[np.float64_t]*> i) 
+    elif i.getType() == 105:
+        return create_datetime64(<Column[np.int64_t]*> i) 
+    else: #i.getType() == 106:
+        return create_string(<Column[string]*> i)
 
-cdef create_ints(Column[np.int32_t]* col):
-    data = np.asarray(<np.int32_t[:col.vec.size()]> &(col.vec[0]))
-    result = np.asarray(data.copy())
-    del data
+cdef create_int32(Column[np.int32_t]* col):
+    cdef data = np.asarray(<np.int32_t[:col.vec.size()]> &(col.vec[0]))
+    cdef result = np.asarray(data.copy())
     col.dispose()
     return result
 
-cdef create_floats(Column[np.float64_t]* col):
-    data = np.asarray(<np.float64_t[:col.vec.size()]> &(col.vec[0]))
-    result = np.asarray(data.copy())
-    del data
+cdef create_float64(Column[np.float64_t]* col):
+    cdef data = np.asarray(<np.float64_t[:col.vec.size()]> &(col.vec[0]))
+    cdef result = np.asarray(data.copy())
+    col.dispose()
+    return result
+
+cdef create_bool(Column[np.int8_t]* col):
+    cdef data = np.asarray(<np.int8_t[:col.vec.size()]> &(col.vec[0]))
+    cdef result = np.asarray(data.copy())
+    col.dispose()
+    return result
+
+cdef create_int64(Column[np.int64_t]* col):
+    cdef data = np.asarray(<np.int64_t[:col.vec.size()]> &(col.vec[0]))
+    cdef result = np.asarray(data.copy())
+    col.dispose()
+    return result
+
+cdef create_datetime64(Column[np.int64_t]* col):
+    cdef data = np.asarray(<np.int64_t[:col.vec.size()]> &(col.vec[0]))
+    cdef result = np.asarray(data.copy())
+    col.dispose()
+    return result
+
+cdef create_string(Column[string]* col):
+    cdef data = np.asarray(col.vec)
+    cdef result = np.asarray(data.copy())
     col.dispose()
     return result

@@ -7,20 +7,47 @@ int svcols = 30;
 std::vector<ColumnBase* > cols;
 for (int ii=0; ii<svcols; ii++)
 {
-	if(ii %2 != 0){
-		Column<double> * col = new Column<double>(SSTR(ii), 101);
+	if(ii % 6 == 0){
+		Column<int8_t> * col = new Column<int8_t>(SSTR(ii), 101);
+		for(int i =0; i < svrows; i++){
+			col->vec.push_back(i % 2 == 0);
+		}
+		cols.push_back(reinterpret_cast<ColumnBase*>(col));
+	}
+	else if(ii % 6 == 1){
+		Column<int32_t> * col = new Column<int32_t>(SSTR(ii), 102);
+		for(int32_t i =0; i < svrows; i++){
+			col->vec.push_back(i);
+		}
+		cols.push_back(reinterpret_cast<ColumnBase*>(col));
+	}
+	else if(ii % 6 == 2){
+		Column<int64_t> * col = new Column<int64_t>(SSTR(ii), 103);
+		for(int64_t i =0; i < svrows; i++){
+			col->vec.push_back(i);
+		}
+		cols.push_back(reinterpret_cast<ColumnBase*>(col));
+	}
+	else if(ii % 6 == 3){
+		Column<double> * col = new Column<double>(SSTR(ii), 104);
 		for(double i =0; i < svrows; i++){
 			col->vec.push_back(i);
 		}
-		
 		cols.push_back(reinterpret_cast<ColumnBase*>(col));
 	}
-	else{
-		Column<int32_t> * col = new Column<int32_t>(SSTR(ii), 202);
-		for(int i =0; i < svrows; i++){
+	else if(ii % 6 == 4){
+		Column<int64_t> * col = new Column<int64_t>(SSTR(ii), 105);
+		for(int64_t i =0; i < svrows; i++){
 			col->vec.push_back(i);
 		}
 		cols.push_back(reinterpret_cast<ColumnBase*>(col));
+	}
+	else{
+	/*	Column<std::string> * col = new Column<std::string>(SSTR(ii), 106);
+		for(int i =0; i < svrows; i++){
+			col->vec.push_back(SSTR(i));
+		}
+		cols.push_back(reinterpret_cast<ColumnBase*>(col));*/
 	}
 }        
 return cols;
