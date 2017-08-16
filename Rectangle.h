@@ -33,6 +33,5 @@ namespace shapes {
         std::vector< std::vector<double> > ret_mat(std::vector< std::vector<double> > sv);
 	std::map< int, std::vector<double> > ret_map(std::map<int, std::vector<double> > & sv);
 	std::vector<ColumnBase* > ret_map();
-	void tidy(std::vector<ColumnBase* > cols);
     };
 }

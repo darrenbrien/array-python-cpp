@@ -1,3 +1,6 @@
+# cython: boundscheck=False
+# cython: cdivision=True
+# cython: wraparound=False
 # distutils: language = c++
 # distutils: sources = Rectangle.cpp
 
@@ -13,6 +16,9 @@ from column cimport Column
 from cython cimport view
 from libc.stdlib cimport malloc, free
 from cpython.mem cimport PyMem_Malloc, PyMem_Realloc, PyMem_Free
+cimport openmp
+from cython.parallel cimport prange
+from cython.parallel cimport parallel
 
 # c++ interface to cython
 cdef extern from "Rectangle.h" namespace "shapes":
@@ -55,11 +61,15 @@ cdef class PyRectangle:
         return self.thisptr.ret_mat(sv)
     def ret_map_uint(self):
         result = self.thisptr.ret_map()
-        d = {}
-        for column in result:
-            name = column.getName().decode('utf8')
-            d[name] = to_numpy(column)
-        return(d)
+        return to_dict(result)
+
+cdef to_dict(vector[ColumnBase*] cols):
+    d = {}
+    for column in cols:
+        name = column.getName().decode('utf8')
+        d[name] = to_numpy(column)
+    return(d)
+
 
 cdef to_numpy(ColumnBase* i):
     if i.getType() == 101:
@@ -68,14 +78,14 @@ cdef to_numpy(ColumnBase* i):
         return create_ints(<Column[np.int32_t]*> i)
 
 cdef create_ints(Column[np.int32_t]* col):
-    cdef view.array data = <np.int32_t[:col.vec.size()]> &col.vec[0]    
+    data = np.asarray(<np.int32_t[:col.vec.size()]> &(col.vec[0]))
     result = np.asarray(data.copy())
     del data
     col.dispose()
     return result
 
 cdef create_floats(Column[np.float64_t]* col):
-    cdef view.array data = <np.float64_t[:col.vec.size()]> &col.vec[0]    
+    data = np.asarray(<np.float64_t[:col.vec.size()]> &(col.vec[0]))
     result = np.asarray(data.copy())
     del data
     col.dispose()
