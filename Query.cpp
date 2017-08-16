@@ -1,15 +1,6 @@
-/*
-Passing variables / arrays between cython and cpp
-Example from 
-http://docs.cython.org/src/userguide/wrapping_CPlusPlus.html
+#include "Query.h"
 
-Adapted to include passing of multidimensional arrays
-
-*/
-
-#include "Rectangle.h"
-
-std::vector<ColumnBase* > Rectangle::get_cols()
+std::vector<ColumnBase* > Query::get_cols(std::string query)
 {
 int svrows = 10000;
 std::vector<ColumnBase* > cols;

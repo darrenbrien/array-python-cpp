@@ -14,7 +14,7 @@ Adapted to include passing of multidimensional arrays
 #include <sstream>
 
 #define SSTR( x ) static_cast< std::ostringstream & >( ( std::ostringstream() << std::dec << x ) ).str()
-class Rectangle {
+class Query {
     public:
-	std::vector<ColumnBase* > get_cols();
+	std::vector<ColumnBase* > get_cols(std::string query);
 };

@@ -3,13 +3,13 @@
 from __future__ import print_function
 import time
 import numpy as np
-from rect import PyRectangle
+from query import PyQuery
 import pandas as pd
 
-R1 = PyRectangle()
+R1 = PyQuery()
 
 for i in range(10):
-	d = R1.get_cols()
+	d = R1.get_cols("gimme the data".encode('utf-8'))
 	df = pd.DataFrame.from_dict(d)
 	print(df)
 	del df

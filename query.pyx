@@ -2,11 +2,7 @@
 # cython: cdivision=True
 # cython: wraparound=False
 # distutils: language = c++
-# distutils: sources = Rectangle.cpp
-
-# Cython interface file for wrapping the object
-#
-#
+# distutils: sources = Query.cpp
 from libcpp.string cimport string
 from libcpp.vector cimport vector
 import numpy as np
@@ -16,15 +12,15 @@ from column cimport Column
 from cython cimport view
 
 # c++ interface to cython
-cdef extern from "Rectangle.h": 
-  cdef cppclass Rectangle:
-        vector[ColumnBase*] get_cols()
+cdef extern from "Query.h": 
+  cdef cppclass Query:
+        vector[ColumnBase*] get_cols(string)
 
 # creating a cython wrapper class
-cdef class PyRectangle:
-    cdef Rectangle *thisptr      # hold a C++ instance which we're wrapping
-    def get_cols(self):
-        result = self.thisptr.get_cols()
+cdef class PyQuery:
+    cdef Query *thisptr
+    def get_cols(self, string query):
+        result = self.thisptr.get_cols(query)
         return to_dict(result)
 
 cdef to_dict(vector[ColumnBase*] cols):
@@ -53,11 +49,3 @@ cdef create_floats(Column[np.float64_t]* col):
     del data
     col.dispose()
     return result
-
-
-
-
-
-
-
-
