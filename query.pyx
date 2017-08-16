@@ -5,6 +5,7 @@
 # distutils: sources = Query.cpp
 from libcpp.string cimport string
 from libcpp.vector cimport vector
+from libcpp.pair cimport pair
 import numpy as np
 cimport numpy as np
 from column cimport ColumnBase
@@ -24,10 +25,11 @@ cdef class PyQuery:
         return to_dict(result)
 
 cdef to_dict(vector[ColumnBase*] cols):
-    d = {}
-    for i in range(cols.size()):
-        name = cols[i].getName().decode('utf8')
-        d[name] = to_numpy(cols[i])
+    cdef d = []
+    cdef string name
+    for i from 0 <= i < cols.size():
+        name = cols[i].getName().decode('utf-8')
+        d.append((name, to_numpy(cols[i])))
     return(d)
 
 cdef to_numpy(ColumnBase* i):

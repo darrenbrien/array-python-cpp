@@ -10,8 +10,7 @@ R1 = PyQuery()
 
 for i in range(10):
 	d = R1.get_cols("gimme the data".encode('utf-8'))
-	df = pd.DataFrame.from_dict(d)
-	print(df)
+	df = pd.DataFrame.from_items(d)
 	del df
 	del d
 
