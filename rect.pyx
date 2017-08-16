@@ -14,62 +14,25 @@ cimport numpy as np
 from column cimport ColumnBase
 from column cimport Column
 from cython cimport view
-from libc.stdlib cimport malloc, free
-from cpython.mem cimport PyMem_Malloc, PyMem_Realloc, PyMem_Free
-cimport openmp
-from cython.parallel cimport prange
-from cython.parallel cimport parallel
 
 # c++ interface to cython
-cdef extern from "Rectangle.h" namespace "shapes":
+cdef extern from "Rectangle.h": 
   cdef cppclass Rectangle:
-        Rectangle(int, int, int, int) except +
-        int x0, y0, x1, y1
-        int getLength()
-        int getHeight()
-        int getArea()
-        void move(int, int)
-        double sum_vec(vector[double])
-        double sum_mat(vector[vector[double]])
-        double sum_mat_ref(vector[vector[double]] &)
-        vector[vector[double]] ret_mat(vector[vector[double]])
-        vector[ColumnBase*] ret_map()
-        void tidy(vector[ColumnBase*])
+        vector[ColumnBase*] get_cols()
 
 # creating a cython wrapper class
 cdef class PyRectangle:
     cdef Rectangle *thisptr      # hold a C++ instance which we're wrapping
-    def __cinit__(self, int x0, int y0, int x1, int y1):
-        self.thisptr = new Rectangle(x0, y0, x1, y1)
-    def __dealloc__(self):
-        del self.thisptr
-    def getLength(self):
-        return self.thisptr.getLength()
-    def getHeight(self):
-        return self.thisptr.getHeight()
-    def getArea(self):
-        return self.thisptr.getArea()
-    def move(self, dx, dy):
-        self.thisptr.move(dx, dy)
-    def sum_vec(self, sv):
-        return self.thisptr.sum_vec(sv)
-    def sum_mat(self, sv):
-        return self.thisptr.sum_mat(sv)
-    def sum_mat_ref(self, sv):
-        return self.thisptr.sum_mat_ref(sv)
-    def ret_mat(self, sv):
-        return self.thisptr.ret_mat(sv)
-    def ret_map_uint(self):
-        result = self.thisptr.ret_map()
+    def get_cols(self):
+        result = self.thisptr.get_cols()
         return to_dict(result)
 
 cdef to_dict(vector[ColumnBase*] cols):
     d = {}
-    for column in cols:
-        name = column.getName().decode('utf8')
-        d[name] = to_numpy(column)
+    for i in range(cols.size()):
+        name = cols[i].getName().decode('utf8')
+        d[name] = to_numpy(cols[i])
     return(d)
-
 
 cdef to_numpy(ColumnBase* i):
     if i.getType() == 101:
