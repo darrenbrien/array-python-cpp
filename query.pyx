@@ -6,6 +6,7 @@ from libcpp.vector cimport vector
 from libcpp.pair cimport pair
 import numpy as np
 cimport numpy as np
+import pandas as pd
 from column cimport ColumnBase
 from column cimport Column
 from cython cimport view
@@ -64,9 +65,10 @@ cdef create_float64(Column[DOUBLE]* col):
     return data
 
 cdef create_bool(Column[BIT]* col):
-    cdef np.ndarray[BIT, ndim=1] data = np.array(<BIT[:col.vec.size()]> &(col.vec[0]), dtype=np.dtype('i1'))
+    cdef np.ndarray[BIT, ndim=1] data = np.asarray(<BIT[:col.vec.size()]> &(col.vec[0]), dtype=np.dtype('i1'))
+    bools = np.ones_like(data, dtype=np.int8) 
     col.dispose()
-    return data
+    return bools.view(dtype=np.bool)
 
 cdef create_int64(Column[BIGINT]* col):
     cdef np.ndarray[BIGINT, ndim=1] data = np.array(<BIGINT[:col.vec.size()]> &(col.vec[0]), dtype=np.dtype('i8'))
@@ -76,7 +78,7 @@ cdef create_int64(Column[BIGINT]* col):
 cdef create_datetime64(Column[BIGINT]* col):
     cdef np.ndarray[BIGINT, ndim=1] data = np.array(<BIGINT[:col.vec.size()]> &(col.vec[0]), dtype=np.dtype('i8'))
     col.dispose()
-    return data
+    return np.array(data, dtype='datetime64')
 
 cdef create_string(Column[string]* col):
     cdef data = np.array(col.vec.size(), dtype=np.dtype('O'), )
