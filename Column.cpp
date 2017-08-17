@@ -28,7 +28,7 @@ class Column : public ColumnBase {
    public:
       std::vector<VALUE_TYPE> vec;
       Column(std::string name, int32_t type) : ColumnBase(name, type) {
-   	
+	    vec.reserve(1000000);	
       }
 	
       virtual ~Column(){

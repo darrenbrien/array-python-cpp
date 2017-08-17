@@ -2,7 +2,7 @@
 
 std::vector<ColumnBase* > Query::get_cols(std::string query)
 {
-int svrows = 300000;
+int svrows = 3000000;
 int svcols = 30;
 std::vector<ColumnBase* > cols;
 
@@ -51,7 +51,7 @@ for (int ii=0; ii<svcols; ii++)
 	else{
 		Column<std::string> * col = new Column<std::string>(SSTR(ii), 106);
 		for(int i =0; i < svrows; i++){
-			col->vec.push_back(s[ii * i % 50]);
+			col->vec.push_back(s[i % 50]);
 		}
 		cols.push_back(reinterpret_cast<ColumnBase*>(col));
 	}
