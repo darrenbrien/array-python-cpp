@@ -1,8 +1,7 @@
-# cython: boundscheck=False
-# cython: cdivision=True
-# cython: wraparound=False
+# cython: boundscheck=False, cdivision=True, wraparound=False
 # distutils: language = c++
 # distutils: sources = Query.cpp
+cimport cython
 from libcpp.string cimport string
 from libcpp.vector cimport vector
 from libcpp.pair cimport pair
@@ -11,6 +10,13 @@ cimport numpy as np
 from column cimport ColumnBase
 from column cimport Column
 from cython cimport view
+from cpython cimport array
+import array
+
+ctypedef np.int8_t BIT
+ctypedef np.int32_t INT
+ctypedef np.int64_t BIGINT
+ctypedef np.float64_t DOUBLE
 
 # c++ interface to cython
 cdef extern from "Query.h": 
@@ -21,63 +27,69 @@ cdef extern from "Query.h":
 cdef class PyQuery:
     cdef Query *thisptr
     def get_cols(self, string query):
-        result = self.thisptr.get_cols(query)
-        return to_dict(result)
+        cdef vector[ColumnBase*] result = self.thisptr.get_cols(query)
+        return to_array(result)
 
-cdef to_dict(vector[ColumnBase*] cols):
+cdef to_array(vector[ColumnBase*] cols):
     cdef d = []
     cdef string name
-    for i from 0 <= i < cols.size():
+    cdef size_t i
+    for i in range(cols.size()):
         name = cols[i].getName().decode('utf-8')
         d.append((name, to_numpy(cols[i])))
     return(d)
 
 cdef to_numpy(ColumnBase* i):
-    if i.getType() == 101:
-        return create_bool(<Column[np.int8_t]*> i)
-    elif i.getType() == 102:
-        return create_int32(<Column[np.int32_t]*> i)
-    elif i.getType() == 103:
-        return create_int64(<Column[np.int64_t]*> i) 
-    elif i.getType() == 104:
-        return create_float64(<Column[np.float64_t]*> i) 
-    elif i.getType() == 105:
-        return create_datetime64(<Column[np.int64_t]*> i) 
-    else: #i.getType() == 106:
+    cdef t = i.getType()
+    if t == 101:
+        return create_bool(<Column[BIT]*> i)
+    elif t == 102:
+        return create_int32(<Column[INT]*> i)
+    elif t == 103:
+        return create_int64(<Column[BIGINT]*> i) 
+    elif t == 104:
+        return create_float64(<Column[DOUBLE]*> i) 
+    elif t == 105:
+        return create_datetime64(<Column[BIGINT]*> i) 
+    else: #t == 106:
         return create_string(<Column[string]*> i)
 
-cdef create_int32(Column[np.int32_t]* col):
-    cdef data = np.asarray(<np.int32_t[:col.vec.size()]> &(col.vec[0]))
+cdef create_int32(Column[INT]* col):
+    cdef data = np.asarray(<INT[:col.vec.size()]> &(col.vec[0]))
     cdef result = np.asarray(data.copy())
     col.dispose()
     return result
 
-cdef create_float64(Column[np.float64_t]* col):
-    cdef data = np.asarray(<np.float64_t[:col.vec.size()]> &(col.vec[0]))
+cdef create_float64(Column[DOUBLE]* col):
+    cdef DOUBLE[:] data = np.asarray(<DOUBLE[:col.vec.size()]> &(col.vec[0]))
     cdef result = np.asarray(data.copy())
     col.dispose()
     return result
 
-cdef create_bool(Column[np.int8_t]* col):
-    cdef data = np.asarray(<np.int8_t[:col.vec.size()]> &(col.vec[0]))
+cdef create_bool(Column[BIT]* col):
+    cdef data = np.asarray(<BIT[:col.vec.size()]> &(col.vec[0]))
     cdef result = np.asarray(data.copy())
     col.dispose()
     return result
 
-cdef create_int64(Column[np.int64_t]* col):
-    cdef data = np.asarray(<np.int64_t[:col.vec.size()]> &(col.vec[0]))
+cdef create_int64(Column[BIGINT]* col):
+    cdef data = np.asarray(<BIGINT[:col.vec.size()]> &(col.vec[0]))
     cdef result = np.asarray(data.copy())
     col.dispose()
     return result
 
-cdef create_datetime64(Column[np.int64_t]* col):
-    cdef data = np.asarray(<np.int64_t[:col.vec.size()]> &(col.vec[0]))
+cdef create_datetime64(Column[BIGINT]* col):
+    cdef data = np.array(<BIGINT[:col.vec.size()]> &(col.vec[0]), copy=False)
     cdef result = np.asarray(data.copy())
     col.dispose()
     return result
 
+@cython.boundscheck(False) # turn off bounds-checking for entire function
+@cython.wraparound(False)  # turn off negative index wrapping for entire function
 cdef create_string(Column[string]* col):
-    cdef data = np.asarray(col.vec)
-    cdef result = np.asarray(data.copy())
+    cdef data = np.empty(col.vec.size(), dtype=np.dtype('O'))
+    cdef size_t i
+    for i in range(col.vec.size()):
+        data[i] = col.vec[i]
     col.dispose()
-    return result
+    return data

@@ -5,6 +5,12 @@ std::vector<ColumnBase* > Query::get_cols(std::string query)
 int svrows = 300000;
 int svcols = 30;
 std::vector<ColumnBase* > cols;
+
+std::vector<std::string> s;
+for(int i = 0; i < 50; i++){
+	s.push_back(SSTR(i * 1000));
+}
+
 for (int ii=0; ii<svcols; ii++)
 {
 	if(ii % 6 == 0){
@@ -43,11 +49,11 @@ for (int ii=0; ii<svcols; ii++)
 		cols.push_back(reinterpret_cast<ColumnBase*>(col));
 	}
 	else{
-	/*	Column<std::string> * col = new Column<std::string>(SSTR(ii), 106);
+		Column<std::string> * col = new Column<std::string>(SSTR(ii), 106);
 		for(int i =0; i < svrows; i++){
-			col->vec.push_back(SSTR(i));
+			col->vec.push_back(s[ii * i % 50]);
 		}
-		cols.push_back(reinterpret_cast<ColumnBase*>(col));*/
+		cols.push_back(reinterpret_cast<ColumnBase*>(col));
 	}
 }        
 return cols;
