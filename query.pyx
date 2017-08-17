@@ -32,6 +32,7 @@ cdef class PyQuery:
 cdef to_array(vector[ColumnBase*] cols):
     cdef d = []
     cdef string name
+    cdef size_t i
     for i in range(cols.size()):
         name = cols[i].getName().decode('utf-8')
         d.append((name, to_numpy(cols[i])))
@@ -77,9 +78,6 @@ cdef create_datetime64(Column[BIGINT]* col):
     col.dispose()
     return data
 
-import cython
-@cython.boundscheck(False) # turn off bounds-checking for entire function
-@cython.wraparound(False)  # turn off negative index wrapping for entire function
 cdef create_string(Column[string]* col):
     cdef data = np.array(col.vec.size(), dtype=np.dtype('O'), )
     col.dispose()
