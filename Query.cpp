@@ -14,7 +14,7 @@ for(int i = 0; i < 50; i++){
 for (int ii=0; ii<svcols; ii++)
 {
 	if(ii % 6 == 0){
-		Column<int8_t> * col = new Column<int8_t>(SSTR(ii), 101);
+		Column<uint8_t> * col = new Column<uint8_t>(SSTR(ii), 101);
 		for(int i =0; i < svrows; i++){
 			col->vec.push_back(i % 2 == 0);
 		}
@@ -43,7 +43,7 @@ for (int ii=0; ii<svcols; ii++)
 	}
 	else if(ii % 6 == 4){
 		Column<int64_t> * col = new Column<int64_t>(SSTR(ii), 105);
-		for(int64_t i =0; i < svrows; i++){
+		for(int64_t i = 1503183628275000000; i < 1503183628275000000 + svrows; i++){
 			col->vec.push_back(i);
 		}
 		cols.push_back(reinterpret_cast<ColumnBase*>(col));
@@ -55,7 +55,7 @@ for (int ii=0; ii<svcols; ii++)
 		}
 		cols.push_back(reinterpret_cast<ColumnBase*>(col));
 	}
-}        
+}       
 return cols;
 }
 

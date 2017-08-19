@@ -13,7 +13,7 @@ from cython cimport view
 from cpython cimport array
 import array
 
-ctypedef np.int8_t BIT
+ctypedef np.uint8_t BIT
 ctypedef np.int32_t INT
 ctypedef np.int64_t BIGINT
 ctypedef np.float64_t DOUBLE
@@ -65,8 +65,8 @@ cdef create_float64(Column[DOUBLE]* col):
     return data
 
 cdef create_bool(Column[BIT]* col):
-    cdef np.ndarray[BIT, ndim=1] data = np.asarray(<BIT[:col.vec.size()]> &(col.vec[0]), dtype=np.dtype('i1'))
-    bools = np.ones_like(data, dtype=np.int8) 
+    cdef np.ndarray[BIT, ndim=1] data = np.asarray(<BIT[:col.vec.size()]> &(col.vec[0]), dtype=np.dtype('u1'))
+    bools = np.ones_like(data, dtype=np.uint8) 
     col.dispose()
     return bools.view(dtype=np.bool)
 
@@ -78,7 +78,7 @@ cdef create_int64(Column[BIGINT]* col):
 cdef create_datetime64(Column[BIGINT]* col):
     cdef np.ndarray[BIGINT, ndim=1] data = np.array(<BIGINT[:col.vec.size()]> &(col.vec[0]), dtype=np.dtype('i8'))
     col.dispose()
-    return np.array(data, dtype='datetime64')
+    return np.array(data, dtype='datetime64[ns]' )
 
 cdef create_string(Column[string]* col):
     cdef data = np.array(col.vec.size(), dtype=np.dtype('O'), )
