@@ -55,28 +55,38 @@ cdef to_numpy(ColumnBase* i):
         return create_string(<Column[string]*> i)
 
 cdef create_int32(Column[INT]* col):
-    cdef np.ndarray[INT, ndim=1] data = np.array(<INT[:col.vec.size()]> &(col.vec[0]), dtype=np.dtype('i4'))
+    cdef vector[INT] new
+    new.swap(col.vec)
+    cdef np.ndarray[INT, ndim=1] data = np.array(<INT[:new.size()]> &(new[0]), dtype=np.dtype('i4'))
     col.dispose()
     return data
 
 cdef create_float64(Column[DOUBLE]* col):
-    cdef np.ndarray[DOUBLE, ndim=1] data = np.array(<DOUBLE[:col.vec.size()]> &(col.vec[0]), dtype=np.dtype('f8'))
+    cdef vector[DOUBLE] new
+    new.swap(col.vec)
+    cdef np.ndarray[DOUBLE, ndim=1] data = np.array(<DOUBLE[:new.size()]> &(new[0]), dtype=np.dtype('f8'))
     col.dispose()
     return data
 
 cdef create_bool(Column[BIT]* col):
-    cdef np.ndarray[BIT, ndim=1] data = np.asarray(<BIT[:col.vec.size()]> &(col.vec[0]), dtype=np.dtype('u1'))
+    cdef vector[BIT] new
+    new.swap(col.vec)
+    cdef np.ndarray[BIT, ndim=1] data = np.asarray(<BIT[:new.size()]> &(new[0]), dtype=np.dtype('u1'))
     bools = np.ones_like(data, dtype=np.uint8) 
     col.dispose()
     return bools.view(dtype=np.bool)
 
 cdef create_int64(Column[BIGINT]* col):
-    cdef np.ndarray[BIGINT, ndim=1] data = np.array(<BIGINT[:col.vec.size()]> &(col.vec[0]), dtype=np.dtype('i8'))
+    cdef vector[BIGINT] new
+    new.swap(col.vec)
+    cdef np.ndarray[BIGINT, ndim=1] data = np.array(<BIGINT[:new.size()]> &(new[0]), dtype=np.dtype('i8'))
     col.dispose()
     return data
 
 cdef create_datetime64(Column[BIGINT]* col):
-    cdef np.ndarray[BIGINT, ndim=1] data = np.array(<BIGINT[:col.vec.size()]> &(col.vec[0]), dtype=np.dtype('i8'))
+    cdef vector[BIGINT] new
+    new.swap(col.vec)
+    cdef np.ndarray[BIGINT, ndim=1] data = np.array(<BIGINT[:new.size()]> &(new[0]), dtype=np.dtype('i8'))
     col.dispose()
     return np.asarray(data, dtype='datetime64[ns]' )
 
@@ -87,4 +97,3 @@ cdef create_string(Column[string]* col):
         data[i] = col.vec[i]
     col.dispose()
     return data
-
