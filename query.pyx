@@ -78,7 +78,7 @@ cdef create_int64(Column[BIGINT]* col):
 cdef create_datetime64(Column[BIGINT]* col):
     cdef np.ndarray[BIGINT, ndim=1] data = np.array(<BIGINT[:col.vec.size()]> &(col.vec[0]), dtype=np.dtype('i8'))
     col.dispose()
-    return np.array(data, dtype='datetime64[ns]' )
+    return np.asarray(data, dtype='datetime64[ns]' )
 
 cdef create_string(Column[string]* col):
     cdef data = np.empty(col.vec.size(), dtype='O')
