@@ -37,7 +37,7 @@ cdef to_array(vector[ColumnBase*] cols):
     for i in range(cols.size()):
         name = cols[i].getName().decode('utf-8')
         d.append((name, to_numpy(cols[i])))
-    return(d)
+    return pd.DataFrame.from_items(d)
 
 cdef to_numpy(ColumnBase* i):
     cdef t = i.getType()
@@ -81,6 +81,10 @@ cdef create_datetime64(Column[BIGINT]* col):
     return np.array(data, dtype='datetime64[ns]' )
 
 cdef create_string(Column[string]* col):
-    cdef data = np.array(col.vec.size(), dtype=np.dtype('O'), )
+    cdef data = np.empty(col.vec.size(), dtype='O')
+    cdef size_t i
+    for i in range(col.vec.size()):
+        data[i] = col.vec[i]
     col.dispose()
     return data
+
