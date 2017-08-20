@@ -18,6 +18,32 @@ ctypedef np.int32_t INT
 ctypedef np.int64_t BIGINT
 ctypedef np.float64_t DOUBLE
 
+# define ArrayWrapper as holding in a vector
+cdef class ArrayWrapper:
+    cdef vector[INT] vec
+    cdef Py_ssize_t shape[1]
+    cdef Py_ssize_t strides[1]
+
+    cdef set_data(self, vector[INT]& data):
+       self.vec.swap(data)
+
+    def __getbuffer__(self, Py_buffer *buffer, int flags):
+        # relevant documentation http://cython.readthedocs.io/en/latest/src/userguide/buffer.html#a-matrix-class
+        cdef Py_ssize_t itemsize = sizeof(self.vec[0])
+
+        self.shape[0] = self.vec.size()
+        self.strides[0] = sizeof(INT)
+        buffer.buf = <char *>&(self.vec[0])
+        buffer.format = 'i'
+        buffer.internal = NULL
+        buffer.itemsize = itemsize
+        buffer.len = self.v.size() * itemsize   # product(shape) * itemsize
+        buffer.ndim = 1
+        buffer.obj = self
+        buffer.readonly = 0
+        buffer.shape = self.shape
+        buffer.strides = self.strides
+        buffer.suboffsets = NULL
 # c++ interface to cython
 cdef extern from "Query.h": 
   cdef cppclass Query:
@@ -55,10 +81,9 @@ cdef to_numpy(ColumnBase* i):
         return create_string(<Column[string]*> i)
 
 cdef create_int32(Column[INT]* col):
-    cdef vector[INT] new
-    new.swap(col.vec)
-    cdef np.ndarray[INT, ndim=1] data = np.array(<INT[:new.size()]> &(new[0]), dtype=np.dtype('i4'))
-    col.dispose()
+    cdef ArrayWrapper w = ArrayWrapper()
+    w.set_data(col.vec) # "array" itself is invalid from here on
+    cdef np.ndarray[INT, ndim=1] data = np.asarray(w)
     return data
 
 cdef create_float64(Column[DOUBLE]* col):
@@ -97,3 +122,4 @@ cdef create_string(Column[string]* col):
         data[i] = col.vec[i]
     col.dispose()
     return data
+
