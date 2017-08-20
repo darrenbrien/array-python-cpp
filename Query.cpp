@@ -2,7 +2,7 @@
 
 std::vector<ColumnBase* > Query::get_cols(std::string query)
 {
-int svrows = 300000;
+int svrows = 3000000;
 int svcols = 30;
 std::vector<ColumnBase* > cols;
 

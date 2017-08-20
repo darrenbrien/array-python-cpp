@@ -36,8 +36,8 @@ cdef to_array(vector[ColumnBase*] cols):
     cdef size_t i
     for i in range(cols.size()):
         name = cols[i].getName().decode('utf-8')
-        d.append((name, to_numpy(cols[i])))
-    return pd.DataFrame.from_items(d)
+        d.append(pd.DataFrame({name : to_numpy(cols[i])}, copy=False))
+    return pd.concat(d, axis=1, copy=False)
 
 cdef to_numpy(ColumnBase* i):
     cdef t = i.getType()
@@ -81,10 +81,5 @@ cdef create_datetime64(Column[BIGINT]* col):
     return np.array(data, dtype='datetime64[ns]' )
 
 cdef create_string(Column[string]* col):
-    cdef data = np.empty(col.vec.size(), dtype='O')
-    cdef size_t i
-    for i in range(col.vec.size()):
-        data[i] = col.vec[i]
-    col.dispose()
-    return data
+    return pd.Series(col.vec, dtype='category', copy=False)
 
