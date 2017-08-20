@@ -35,8 +35,8 @@ cdef to_array(vector[ColumnBase*] cols):
     cdef string name
     cdef size_t i
     for i in range(cols.size()):
-        name = cols[i].getName().decode('utf-8')
-        d.append((name, to_numpy(cols[i])))
+        name = cols[i].getName()
+        d.append((name.decode('utf-8'), to_numpy(cols[i])))
     return pd.DataFrame.from_items(d)
 
 cdef to_numpy(ColumnBase* i):
