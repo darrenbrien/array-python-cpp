@@ -2,7 +2,7 @@
 
 std::vector<ColumnBase* > Query::get_cols(std::string query)
 {
-int svrows = 30;
+int svrows = 300000;
 int svcols = 30;
 std::vector<ColumnBase* > cols;
 
@@ -54,13 +54,11 @@ for (int ii=0; ii<svcols; ii++)
 		for(int i =0; i < svrows; i++){
 			char string[10];
 			size_t length = sprintf(string, "%d", i % 50);
-			std::cout << string << ' ';
 			col->lengths.push_back(length);
 			col->offsets.push_back(offset);
 			offset += length;
-			col->vec.insert(col->vec.begin(), string, string + length );
+			col->vec.insert(col->vec.end(), string, string + length );
 		}
-		std::cout << std::endl;
 		cols.push_back(reinterpret_cast<ColumnBase*>(col));
 	}
 }       

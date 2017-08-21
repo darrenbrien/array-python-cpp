@@ -82,16 +82,16 @@ cdef create_datetime64(Column[BIGINT]* col):
     return np.asarray(data, dtype='datetime64[ns]' )
 
 cdef create_string(ByteStringColumn* col):
-    cdef data = np.empty(col.lengths.size(), dtype='U')
+    cdef data = np.empty(col.lengths.size(), dtype='O')
     cdef size_t i
-    print(col.vec.size())
-    print(col.offsets.size())
-    print(col.lengths.size())
-    cdef char* c_string = &(col.vec[0])
-    cdef bytes py_string = c_string
-    print(py_string)
-    print(py_string.decode('utf-8'))
+    for i in range(col.lengths.size()):
+        res = get_c_string(&(col.vec[col.offsets[i]]), col.lengths[i])
+        data[i] = res
     col.dispose()
-    print(data)
     return data
+
+cdef inline get_c_string(char* c_string, size_t length):
+    cdef bytes py_string = c_string[:length]
+    return py_string.decode('utf-8')
+
 
