@@ -6,11 +6,6 @@ int svrows = 300000;
 int svcols = 30;
 std::vector<ColumnBase* > cols;
 
-std::vector<std::string> s;
-for(int i = 0; i < 50; i++){
-	s.push_back(SSTR(i * 1000));
-}
-
 for (int ii=0; ii<svcols; ii++)
 {
 	if(ii % 6 == 0){
@@ -53,7 +48,7 @@ for (int ii=0; ii<svcols; ii++)
 		size_t offset = 0;
 		for(int i =0; i < svrows; i++){
 			char string[10];
-			size_t length = sprintf(string, "%d", i % 50);
+			size_t length = sprintf(string, "%d", 1000);
 			col->lengths.push_back(length);
 			col->offsets.push_back(offset);
 			offset += length;

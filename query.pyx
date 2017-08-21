@@ -55,7 +55,7 @@ cdef to_numpy(ColumnBase* i):
     else: #t == 106:
         return create_string(<ByteStringColumn*> i)
 
-cdef create_int32(Column[INT]* col):
+cdef np.ndarray[INT] create_int32(Column[INT]* col):
     cdef np.ndarray[INT, ndim=1] data = np.array(<INT[:col.vec.size()]> &(col.vec[0]), dtype=np.dtype('i4'))
     col.dispose()
     return data
@@ -85,13 +85,10 @@ cdef create_string(ByteStringColumn* col):
     cdef data = np.empty(col.lengths.size(), dtype='O')
     cdef size_t i
     for i in range(col.lengths.size()):
-        res = get_c_string(&(col.vec[col.offsets[i]]), col.lengths[i])
-        data[i] = res
+        data[i] = get_c_string(&(col.vec[col.offsets[i]]), col.lengths[i])
     col.dispose()
     return data
 
-cdef inline get_c_string(char* c_string, size_t length):
-    cdef bytes py_string = c_string[:length]
-    return py_string.decode('utf-8')
-
-
+cdef inline unicode get_c_string(char* c_string, size_t length):
+    return c_string[:length].decode('utf8')
+    
