@@ -84,7 +84,7 @@ cdef create_string(Column[string]* col):
     cdef data = np.empty(col.vec.size(), dtype='O')
     cdef size_t i
     for i in range(col.vec.size()):
-        data[i] = col.vec[i]
+        data[i] = col.vec[i].decode('utf-8')
     col.dispose()
     return data
 
