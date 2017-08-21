@@ -38,4 +38,24 @@ class Column : public ColumnBase {
 	  delete this;
       }
 };
+
+
+class ByteStringColumn : public ColumnBase {
+   public:
+      std::vector<char> vec;
+      std::vector<size_t> lengths;
+      std::vector<size_t> offsets;
+      ByteStringColumn(std::string name, int32_t type) : ColumnBase(name, type) {
+            vec.reserve(1000000);
+      }
+
+      virtual ~ByteStringColumn(){
+      }
+
+      void dispose(){
+          delete this;
+      }
+};
+
+
 #endif

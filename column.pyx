@@ -25,4 +25,15 @@ cdef extern from "Column.cpp":
         vector[T] vec
         void dispose()
 
+cdef extern from "Column.cpp": 
+    cdef cppclass ByteStringColumn:
+        ByteStringColumn(string name, int type) except +
+        int getType()
+        string getName()
+        vector[char] vec
+        vector[size_t] offsets
+        vector[size_t] lengths
+        void dispose()
+
+
 

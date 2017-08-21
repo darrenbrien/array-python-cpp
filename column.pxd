@@ -1,5 +1,8 @@
 from libcpp.string cimport string
 from libcpp.vector cimport vector
+import numpy as np
+cimport numpy as np
+
 
 cdef extern from "Column.cpp":
     cdef cppclass ColumnBase:
@@ -14,3 +17,15 @@ cdef extern from "Column.cpp":
         string getName()
         vector[T] vec
         void dispose()
+
+
+cdef extern from "Column.cpp":
+    cdef cppclass ByteStringColumn:
+        ByteStringColumn(string name, int type) except +
+        int getType()
+        string getName()
+        vector[char] vec
+        vector[size_t] offsets
+        vector[size_t] lengths
+        void dispose()
+

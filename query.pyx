@@ -9,6 +9,7 @@ cimport numpy as np
 import pandas as pd
 from column cimport ColumnBase
 from column cimport Column
+from column cimport ByteStringColumn
 from cython cimport view
 from cpython cimport array
 import array
@@ -52,7 +53,7 @@ cdef to_numpy(ColumnBase* i):
     elif t == 105:
         return create_datetime64(<Column[BIGINT]*> i) 
     else: #t == 106:
-        return create_string(<Column[string]*> i)
+        return create_string(<ByteStringColumn*> i)
 
 cdef create_int32(Column[INT]* col):
     cdef np.ndarray[INT, ndim=1] data = np.array(<INT[:col.vec.size()]> &(col.vec[0]), dtype=np.dtype('i4'))
@@ -80,11 +81,17 @@ cdef create_datetime64(Column[BIGINT]* col):
     col.dispose()
     return np.asarray(data, dtype='datetime64[ns]' )
 
-cdef create_string(Column[string]* col):
-    cdef data = np.empty(col.vec.size(), dtype='O')
+cdef create_string(ByteStringColumn* col):
+    cdef data = np.empty(col.lengths.size(), dtype='U')
     cdef size_t i
-    for i in range(col.vec.size()):
-        data[i] = col.vec[i]
+    print(col.vec.size())
+    print(col.offsets.size())
+    print(col.lengths.size())
+    cdef char* c_string = &(col.vec[0])
+    cdef bytes py_string = c_string
+    print(py_string)
+    print(py_string.decode('utf-8'))
     col.dispose()
+    print(data)
     return data
 

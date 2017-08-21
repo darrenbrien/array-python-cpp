@@ -10,6 +10,7 @@ Adapted to include passing of multidimensional arrays
 #include <vector>
 #include <string>
 #include <stdint.h>
+#include <stdio.h>
 #include "Column.cpp"
 #include <sstream>
 
