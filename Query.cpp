@@ -48,11 +48,11 @@ for (int ii=0; ii<svcols; ii++)
 		size_t offset = 0;
 		for(int i =0; i < svrows; i++){
 			char string[10];
-			size_t length = sprintf(string, "%d", 1000);
+			size_t length = sprintf(string, "%d", 100* (i % 50));
 			col->lengths.push_back(length);
 			col->offsets.push_back(offset);
 			offset += length;
-			col->vec.insert(col->vec.end(), string, string + length );
+			col->vec.insert(col->vec.end(), string, string + length);
 		}
 		cols.push_back(reinterpret_cast<ColumnBase*>(col));
 	}

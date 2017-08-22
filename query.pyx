@@ -1,4 +1,4 @@
-# cython: boundscheck=False, cdivision=True, wraparound=False
+# cython: language_level=3, boundscheck=False, cdivision=True, wraparound=False
 # distutils: language = c++
 # distutils: sources = Query.cpp
 from libcpp.string cimport string
@@ -82,10 +82,13 @@ cdef create_datetime64(Column[BIGINT]* col):
     return np.asarray(data, dtype='datetime64[ns]' )
 
 cdef create_string(ByteStringColumn* col):
+    cdef size_t[:] lengths = <size_t[:col.lengths.size()]> &(col.lengths[0])
+    cdef size_t[:] offsets = <size_t[:col.offsets.size()]> &(col.offsets[0])
     cdef data = np.empty(col.lengths.size(), dtype='O')
     cdef size_t i
+    cdef unicode string = get_c_string(&(col.vec[0]), col.vec.size())
     for i in range(col.lengths.size()):
-        data[i] = get_c_string(&(col.vec[col.offsets[i]]), col.lengths[i])
+        data[i] = string[offsets[i]:offsets[i] + lengths[i]] 
     col.dispose()
     return data
 
