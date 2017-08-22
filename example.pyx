@@ -27,20 +27,35 @@ def cfuncB():
     return a
 
 def cfuncC():
-    cdef size_t length = 1500000
+    cdef size_t length = 1000
+    cdef int strLength = 5
     cdef data = np.empty(length, dtype='O')
     cdef:
         unicode a
         arr, template = array.array('B')
         int i, j
-    arr = array.clone(template, 10, False)
-    for i in range(100, 105):        
+    arr = array.clone(template, strLength, False)
+    for i in range(100, 100 + strLength):        
         arr[i-100] = i
-
     for j in range(length):
-        data[j] = arr.tobytes().decode('utf-8')
+        data[j] = arr[1:3].tobytes().decode('utf-8')
     return data
 
+def cfuncD():
+    cdef size_t length = 1000
+    cdef int strLength = 5
+    cdef data = np.empty(length, dtype='O')
+    cdef lengths = np.ones(length, dtype=np.dtype('i4')) * 5
+    cdef offsets = np.arange(0, 5000, 5)
+    cdef arr, template = array.array('B')
+    arr = array.clone(template, 5 * length, False)
+    cdef size_t i, j
+    for j in range(strLength * length):
+        arr[j] = j % strLength + 100
+    cdef unicode string = arr.tobytes().decode('utf-8')
+    for i in range(length):
+        data[i] = string[offsets[i]:offsets[i] + lengths[i]]    
+    return data
 
 # https://stackoverflow.com/questions/23064141/optimizing-strings-in-cython
 # http://cython.readthedocs.io/en/latest/src/tutorial/array.html
