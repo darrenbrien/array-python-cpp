@@ -35,6 +35,7 @@ cdef to_array(vector[ColumnBase*] cols):
     cdef d = []
     cdef string name
     cdef size_t i
+    cdef tuple
     for i in range(cols.size()):
         name = cols[i].getName()
         d.append((name.decode('utf-8'), to_numpy(cols[i])))
@@ -55,7 +56,7 @@ cdef to_numpy(ColumnBase* i):
     else: #t == 106:
         return create_string(<ByteStringColumn*> i)
 
-cdef np.ndarray[INT] create_int32(Column[INT]* col):
+cdef create_int32(Column[INT]* col):
     cdef np.ndarray[INT, ndim=1] data = np.array(<INT[:col.vec.size()]> &(col.vec[0]), dtype=np.dtype('i4'))
     col.dispose()
     return data
@@ -66,10 +67,9 @@ cdef create_float64(Column[DOUBLE]* col):
     return data
 
 cdef create_bool(Column[BIT]* col):
-    cdef np.ndarray[BIT, ndim=1] data = np.asarray(<BIT[:col.vec.size()]> &(col.vec[0]), dtype=np.dtype('u1'))
-    bools = np.ones_like(data, dtype=np.uint8) 
+    cdef np.ndarray[BIT, ndim=1] data = np.array(<BIT[:col.vec.size()]> &(col.vec[0]), dtype=np.dtype('u1'))
     col.dispose()
-    return bools.view(dtype=np.bool)
+    return data.astype(np.bool)
 
 cdef create_int64(Column[BIGINT]* col):
     cdef np.ndarray[BIGINT, ndim=1] data = np.array(<BIGINT[:col.vec.size()]> &(col.vec[0]), dtype=np.dtype('i8'))
@@ -82,13 +82,15 @@ cdef create_datetime64(Column[BIGINT]* col):
     return np.asarray(data, dtype='datetime64[ns]' )
 
 cdef create_string(ByteStringColumn* col):
-    cdef size_t[:] lengths = <size_t[:col.lengths.size()]> &(col.lengths[0])
-    cdef size_t[:] offsets = <size_t[:col.offsets.size()]> &(col.offsets[0])
+    cdef np.ndarray[size_t] lengths = np.asarray(<size_t[:col.lengths.size()]> &(col.lengths[0]))
+    cdef np.ndarray[size_t] offsets = np.asarray(<size_t[:col.offsets.size()]> &(col.offsets[0]))
     cdef data = np.empty(col.lengths.size(), dtype='O')
     cdef size_t i
-    cdef unicode string = get_c_string(&(col.vec[0]), col.vec.size())
+    cdef np.ndarray[char] arr = np.asarray(<char[:col.vec.size()]> &(col.vec[0]))
+    #cdef unicode string = get_c_string(&(col.vec[0]), col.vec.size())
     for i in range(col.lengths.size()):
-        data[i] = string[offsets[i]:offsets[i] + lengths[i]] 
+        data[i] = get_c_string(&(col.vec[0]) + offsets[i], lengths[i])
+        #data[i] = string[offsets[i]:offsets[i] + lengths[i]] 
     col.dispose()
     return data
 

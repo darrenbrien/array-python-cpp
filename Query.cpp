@@ -11,7 +11,7 @@ for (int ii=0; ii<svcols; ii++)
 	if(ii % 6 == 0){
 		Column<uint8_t> * col = new Column<uint8_t>(SSTR(ii), 101);
 		for(int i =0; i < svrows; i++){
-			col->vec.push_back(i % 2 == 0);
+			col->vec.push_back(i % 2);
 		}
 		cols.push_back(reinterpret_cast<ColumnBase*>(col));
 	}
