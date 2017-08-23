@@ -1,4 +1,3 @@
-%%cython
 import Cython.Compiler.Options
 Cython.Compiler.Options.annotate = True
 
@@ -26,7 +25,6 @@ def cfuncB():
         for i in range(127):
             arr[i] = i
 
-        #a = arr.tobytes().decode('utf-8')
         a = arr.data.as_chars[:len(arr)].decode('utf-8')
     return a
 

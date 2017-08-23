@@ -38,7 +38,7 @@ cdef to_array(vector[ColumnBase*] cols):
     cdef tuple
     for i in range(cols.size()):
         name = cols[i].getName()
-        d.append((name.decode('utf-8'), to_numpy(cols[i])))
+        d.append((name, to_numpy(cols[i])))
     return pd.DataFrame.from_items(d)
 
 cdef to_numpy(ColumnBase* i):
@@ -87,13 +87,10 @@ cdef create_string(ByteStringColumn* col):
     cdef data = np.empty(col.lengths.size(), dtype='O')
     cdef size_t i
     cdef np.ndarray[char] arr = np.asarray(<char[:col.vec.size()]> &(col.vec[0]))
-    #cdef unicode string = get_c_string(&(col.vec[0]), col.vec.size())
     for i in range(col.lengths.size()):
         data[i] = get_c_string(&(col.vec[0]) + offsets[i], lengths[i])
-        #data[i] = string[offsets[i]:offsets[i] + lengths[i]] 
     col.dispose()
     return data
 
 cdef inline unicode get_c_string(char* c_string, size_t length):
-    return c_string[:length].decode('utf8')
-    
+    return c_string[:length].decode('utf-8', 'strict')
