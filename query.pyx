@@ -1,4 +1,5 @@
 # cython: boundscheck=False, cdivision=True, wraparound=False
+
 # distutils: language = c++
 # distutils: sources = Query.cpp
 from libcpp.string cimport string
@@ -65,10 +66,9 @@ cdef create_float64(Column[DOUBLE]* col):
     return data
 
 cdef create_bool(Column[BIT]* col):
-    cdef np.ndarray[BIT, ndim=1] data = np.asarray(<BIT[:col.vec.size()]> &(col.vec[0]), dtype=np.dtype('u1'))
-    bools = np.ones_like(data, dtype=np.uint8) 
+    cdef np.ndarray[BIT, ndim=1] data = np.array(<BIT[:col.vec.size()]> &(col.vec[0]), dtype=np.dtype('u1'))
     col.dispose()
-    return bools.view(dtype=np.bool)
+    return data.view(dtype=np.bool)
 
 cdef create_int64(Column[BIGINT]* col):
     cdef np.ndarray[BIGINT, ndim=1] data = np.array(<BIGINT[:col.vec.size()]> &(col.vec[0]), dtype=np.dtype('i8'))
@@ -86,5 +86,6 @@ cdef create_string(Column[string]* col):
     for i in range(col.vec.size()):
         data[i] = col.vec[i].decode('utf-8')
     col.dispose()
-    return data
+    return data 
+
 

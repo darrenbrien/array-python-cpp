@@ -1,16 +1,17 @@
 # Python running example
 
-from __future__ import print_function
-import time
 import numpy as np
 from query import PyQuery
 import pandas as pd
+import numpy as np
+import timeit
 
-R1 = PyQuery()
-
-for i in range(10):
+def run():
+	R1 = PyQuery()
 	df = R1.get_cols("gimme the data".encode('utf-8'))
-	#print(df.shape)
-	#print(df.dtypes.value_counts())
-	#print(df.memory_usage().sum() / 1024.0 **2)
+	#print(df.head())
+	return df
 
+result = timeit.Timer(run).repeat(repeat=10, number=1)
+print("{} runs took {}, min: {}, median:{}, max:{}".format(len(result), sum(result), min(result), np.median(result), max(result))) 
+print(["%.2f"%item for item in result])
