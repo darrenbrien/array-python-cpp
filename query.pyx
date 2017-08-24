@@ -1,4 +1,4 @@
-# cython: language_level=3, boundscheck=False, cdivision=True, wraparound=False
+# cython: language_level=3, boundscheck=False, cdivision=True, wraparound=False, profile=True
 # distutils: language = c++
 # distutils: sources = Query.cpp
 from libcpp.string cimport string
