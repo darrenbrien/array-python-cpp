@@ -47,6 +47,8 @@ class ByteStringColumn : public ColumnBase {
       std::vector<size_t> offsets;
       ByteStringColumn(std::string name, int32_t type) : ColumnBase(name, type) {
             vec.reserve(1000000);
+            offsets.reserve(1000000);
+            lengths.reserve(1000000);
       }
 
       virtual ~ByteStringColumn(){
