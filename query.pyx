@@ -87,7 +87,6 @@ cdef create_string(ByteStringColumn* col):
     cdef np.ndarray[size_t] offsets = np.asarray(<size_t[:col.offsets.size()]> &(col.offsets[0]))
     cdef data = np.empty(col.lengths.size(), dtype='O')
     cdef size_t i
-    cdef np.ndarray[char] arr = np.asarray(<char[:col.vec.size()]> &(col.vec[0]))
     cdef unicode c_string = get_c_string(&(col.vec[0]), col.vec.size())
     for i in range(col.lengths.size()):
         data[i] = c_string[offsets[i]:offsets[i] + lengths[i]]
