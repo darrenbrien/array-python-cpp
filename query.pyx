@@ -1,4 +1,4 @@
-# cython: boundscheck=False, cdivision=True, wraparound=False
+# cython: boundscheck=False, cdivision=True, wraparound=False, profile=True
 
 # distutils: language = c++
 # distutils: sources = Query.cpp
