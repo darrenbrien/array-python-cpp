@@ -5,7 +5,7 @@ std::vector<ColumnBase* > Query::get_cols(std::string query)
 int svrows = 300000;
 int svcols = 30;
 std::vector<ColumnBase* > cols;
-char string[10] = { 'a' , 'b' , 'c', 'd', 'e', 'f', 'g', '\0', '\0', '\0'};
+char string[10] = { 'a' , 'b' , 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'};
 size_t max_len = 10;
 for (int ii=0; ii<svcols; ii++)
 {
@@ -47,9 +47,9 @@ for (int ii=0; ii<svcols; ii++)
 	else{
 		ByteStringColumn * col = new ByteStringColumn(SSTR(ii), 106);
 		for(int i =0; i < svrows; i++){
-			col->lengths.push_back(i % 8);
-			col->offsets.push_back(i * max_len);
-			col->vec.insert(col->vec.end(), string, string + max_len);
+			col->lengths.push_back(i % 11);
+                        col->offsets.push_back(i * max_len);
+                        col->vec.insert(col->vec.end(), string, string + max_len);
 		}
 		cols.push_back(reinterpret_cast<ColumnBase*>(col));
 	}
