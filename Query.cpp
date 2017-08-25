@@ -49,7 +49,6 @@ for (int ii=0; ii<svcols; ii++)
 		cols.push_back(reinterpret_cast<ColumnBase*>(col));
 	}
 	else{
-		//continue;
 		Column<std::string> * col = new Column<std::string>(SSTR(ii), 106);
 		for(int i =0; i < svrows; i++){
 			col->vec.push_back(s[i % 50]);
