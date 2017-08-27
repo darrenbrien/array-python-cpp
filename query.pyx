@@ -1,7 +1,7 @@
 # cython: boundscheck=False, cdivision=True, wraparound=False, profile=True
 
 # distutils: language = c++
-# distutils: sources = Query.cpp
+# distutils: sources = querySubmitter.cpp
 from libcpp.string cimport string
 from libcpp.vector cimport vector
 from libcpp.pair cimport pair
@@ -20,15 +20,16 @@ ctypedef np.int64_t BIGINT
 ctypedef np.float64_t DOUBLE
 
 # c++ interface to cython
-cdef extern from "Query.h": 
+cdef extern from "drill/querySubmitter.hpp": 
   cdef cppclass Query:
-        vector[ColumnBase*] get_cols(string)
+        vector[ColumnBase*] get_cols(int, vector[string])
 
 # creating a cython wrapper class
 cdef class PyQuery:
     cdef Query *thisptr
     def get_cols(self, string query):
-        cdef vector[ColumnBase*] result = self.thisptr.get_cols(query)
+        params = query.split(' ')
+        cdef vector[ColumnBase*] result = self.thisptr.get_cols(13, params)
         return to_array(result)
 
 cdef to_array(vector[ColumnBase*] cols):

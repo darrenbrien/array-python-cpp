@@ -1,5 +1,5 @@
 # distutils: language = c++
-# distutils: sources = Column.cpp
+# distutils: sources = column.hpp
 
 # Cython interface file for wrapping the object
 #
@@ -11,13 +11,13 @@ import numpy as np
 cimport numpy as np
 
 # c++ interface to cython
-cdef extern from "Column.cpp": 
+cdef extern from "drill/column.hpp": 
     cdef cppclass ColumnBase:
         ColumnBase(string name, int type) except +
         int getType()
         string getName()
 
-cdef extern from "Column.cpp": 
+cdef extern from "drill/column.hpp": 
     cdef cppclass Column[T]:
         Column(string name, int type) except +
         int getType()
@@ -25,4 +25,18 @@ cdef extern from "Column.cpp":
         vector[T] vec
         void dispose()
 
+cdef extern from "drill/protobuf/Types.pb.h":
+    cdef cppclass MinorType:
+        pass
 
+cdef extern from "drill/protobuf/Types.pb.h" namespace "common":
+    cdef MinorType TINYINT
+    cdef MinorType SMALLINT
+    cdef MinorType INT
+    cdef MinorType BIGINT 
+    cdef MinorType TIMESTAMPTZ 
+    cdef MinorType TIMESTAMP 
+    cdef MinorType FLOAT4
+    cdef MinorType FLOAT8 
+    cdef MinorType BIT 
+    cdef MinorType VARCHAR 
