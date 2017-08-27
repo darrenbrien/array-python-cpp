@@ -9,7 +9,7 @@ import numpy
 extension = Extension("drillpython",
               sources=["column.pyx", "query.pyx"],  
               include_dirs=["/drill/contrib/native/client/src/include/","/usr/local/drill_boost_1_60_0/"],
-              libraries = ["/drill/contrib/native/client/build/libquerySubmitter.a",],
+              #libraries = ["/drill/contrib/native/client/build/libquerySubmitter.a",],
               language="c++",
               extra_objects=["/drill/contrib/native/client/build/libquerySubmitter.a",]
 )

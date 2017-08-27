@@ -22,14 +22,14 @@ ctypedef np.float64_t DOUBLE
 # c++ interface to cython
 cdef extern from "drill/querySubmitter.hpp": 
   cdef cppclass Query:
-        vector[ColumnBase*] get_cols(int, vector[string])
+        vector[ColumnBase*] get_cols(vector[pair[string, string]])
 
 # creating a cython wrapper class
 cdef class PyQuery:
     cdef Query *thisptr
     def get_cols(self, string query):
-        params = query.split(' ')
-        cdef vector[ColumnBase*] result = self.thisptr.get_cols(13, params)
+        params = [tuple(i.split('=')) for i in query.split(' ')]
+        cdef vector[ColumnBase*] result = self.thisptr.get_cols(params)
         return to_array(result)
 
 cdef to_array(vector[ColumnBase*] cols):
