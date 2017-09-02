@@ -15,6 +15,16 @@ cdef extern from "drill/column.hpp":
         vector[T] vec
         void dispose()
 
+cdef extern from "drill/column.hpp":
+    cdef cppclass ByteStringColumn:
+        ByteStringColumn(string name, int t)
+        int getType()
+        string getName()
+        vector[char] vec
+        vector[size_t] offsets
+        vector[size_t] lengths
+        void dispose()
+
 cdef extern from "drill/protobuf/Types.pb.h":
     cdef cppclass MinorType:
         pass

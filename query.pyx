@@ -9,6 +9,7 @@ cimport numpy as np
 import pandas as pd
 from column cimport ColumnBase
 from column cimport Column
+from column cimport ByteStringColumn
 from column cimport MinorType
 from column cimport TINYINT, SMALLINT, INT, BIGINT, TIMESTAMP, FLOAT4, FLOAT8, BIT, VARCHAR
 from cython cimport view
@@ -55,7 +56,7 @@ cdef to_numpy(ColumnBase* i):
     elif t == <int> TIMESTAMP:
         return create_datetime64(<Column[cBIGINT]*> i) 
     else: #t == <int> VARCHAR:
-        return create_string(<Column[string]*> i)
+        return create_string(<ByteStringColumn*> i)
 
 cdef create_int32(Column[cINT]* col):
     cdef np.ndarray[cINT, ndim=1] data = np.array(<cINT[:col.vec.size()]> &(col.vec[0]), dtype=np.dtype('i4'))
@@ -82,12 +83,16 @@ cdef create_datetime64(Column[cBIGINT]* col):
     col.dispose()
     return np.asarray(data, dtype='datetime64[ms]' )
 
-cdef create_string(Column[string]* col):
-    cdef data = np.empty(col.vec.size(), dtype='O')
+cdef create_string(ByteStringColumn* col):
+    cdef np.ndarray[size_t] lengths = np.asarray(<size_t[:col.lengths.size()]> &(col.lengths[0]))
+    cdef np.ndarray[size_t] offsets = np.asarray(<size_t[:col.offsets.size()]> &(col.offsets[0]))
+    cdef data = np.empty(col.lengths.size(), dtype='O')
     cdef size_t i
-    for i in range(col.vec.size()):
-        data[i] = col.vec[i].decode('utf-8')
+    cdef unicode c_string = get_c_string(&(col.vec[0]), col.vec.size())
+    for i in range(col.lengths.size()):
+        data[i] = c_string[offsets[i]:offsets[i] + lengths[i]]
     col.dispose()
-    return data 
+    return data
 
-
+cdef unicode get_c_string(char* c_string, size_t length):
+    return c_string[:length].decode('utf-8', 'strict')

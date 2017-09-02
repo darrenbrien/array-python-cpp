@@ -13,16 +13,26 @@ cimport numpy as np
 # c++ interface to cython
 cdef extern from "drill/column.hpp": 
     cdef cppclass ColumnBase:
-        ColumnBase(string name, int type) except +
+        ColumnBase(string name, int type)
         int getType()
         string getName()
 
 cdef extern from "drill/column.hpp": 
     cdef cppclass Column[T]:
-        Column(string name, int type) except +
+        Column(string name, int type) 
         int getType()
         string getName()
         vector[T] vec
+        void dispose()
+
+cdef extern from "drill/column.hpp":
+    cdef cppclass ByteStringColumn:
+        ByteStringColumn(string name, int type)
+        int getType()
+        string getName()
+        vector[char] vec
+        vector[size_t] offsets
+        vector[size_t] lengths
         void dispose()
 
 cdef extern from "drill/protobuf/Types.pb.h":
