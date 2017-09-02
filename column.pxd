@@ -14,3 +14,19 @@ cdef extern from "drill/column.hpp":
         string getName()
         vector[T] vec
         void dispose()
+
+cdef extern from "drill/protobuf/Types.pb.h":
+    cdef cppclass MinorType:
+        pass
+
+cdef extern from "drill/protobuf/Types.pb.h" namespace "common":
+    cdef MinorType TINYINT
+    cdef MinorType SMALLINT
+    cdef MinorType INT
+    cdef MinorType BIGINT
+    cdef MinorType TIMESTAMPTZ
+    cdef MinorType TIMESTAMP
+    cdef MinorType FLOAT4
+    cdef MinorType FLOAT8
+    cdef MinorType BIT
+    cdef MinorType VARCHAR
