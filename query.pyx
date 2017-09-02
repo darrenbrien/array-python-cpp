@@ -1,5 +1,4 @@
 # cython: boundscheck=False, cdivision=True, wraparound=False, profile=True
-
 # distutils: language = c++
 # distutils: sources = querySubmitter.cpp
 from libcpp.string cimport string

@@ -6,18 +6,21 @@ import numpy
 # Use python setup.py build_ext --inplace
 # to compile
 
-query_ext = Extension("drillpython",
+query_ext = Extension("query",
               sources=["query.pyx"],  
               include_dirs=["/drill/contrib/native/client/src/include/","/usr/local/drill_boost_1_60_0/"],
+	      libraries=['querySubmitter'],
+	      library_dirs=['/drill/contrib/native/client/build/'],
               language="c++",
-              extra_objects=["/drill/contrib/native/client/build/libquerySubmitter.a",]
+              extra_objects=["/drill/contrib/native/client/build/libquerySubmitter.a",],
+	      runtime_library_dirs=['/drill/contrib/native/client/build/'],
 )
 
-column_ext = Extension("drillpython",
+column_ext = Extension("column",
               sources=["column.pyx"],  
               include_dirs=["/drill/contrib/native/client/src/include/","/usr/local/drill_boost_1_60_0/"],
               language="c++",
-              extra_objects=["/drill/contrib/native/client/build/libquerySubmitter.a",]
+              #extra_objects=["/drill/contrib/native/client/build/libquerySubmitter.a",]
 )
 
 setup(
