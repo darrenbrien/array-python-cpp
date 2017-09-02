@@ -9,11 +9,10 @@ import numpy
 query_ext = Extension("query",
               sources=["query.pyx"],  
               include_dirs=["/drill/contrib/native/client/src/include/","/usr/local/drill_boost_1_60_0/"],
-	      libraries=['querySubmitter'],
-	      library_dirs=['/drill/contrib/native/client/build/'],
+              libraries=["drillClient"],
+              library_dirs=["/drill/contrib/native/client/build/src/clientlib"],
               language="c++",
               extra_objects=["/drill/contrib/native/client/build/libquerySubmitter.a",],
-	      runtime_library_dirs=['/drill/contrib/native/client/build/'],
 )
 
 column_ext = Extension("column",

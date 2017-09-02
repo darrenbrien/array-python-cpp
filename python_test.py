@@ -8,8 +8,9 @@ import timeit
 
 def run():
 	R1 = PyQuery()
-	df = R1.get_cols("gimme the data".encode('utf-8'))
-	#print(df.head())
+	connString = 'query="select * from dfs.flights.flights_by_yr limit 10" type=sql connectStr=local=172.17.0.2:31010 api=async logLevel=info'
+	df = R1.get_cols(connString)
+	print(df.head())
 	return df
 
 result = timeit.Timer(run).repeat(repeat=10, number=1)

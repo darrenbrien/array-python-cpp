@@ -26,8 +26,10 @@ cdef extern from "drill/querySubmitter.hpp":
 # creating a cython wrapper class
 cdef class PyQuery:
     cdef Query *thisptr
-    def get_cols(self, string query):
-        params = [tuple(i.split('=')) for i in query.split(' ')]
+    def get_cols(self, query):
+        print(query)
+        params = [tuple(map(lambda s: s.encode('utf-8'), i.split('='))) for i in query.split(' ')]
+        print(params)
         cdef vector[ColumnBase*] result = self.thisptr.get_cols(params)
         return to_array(result)
 
