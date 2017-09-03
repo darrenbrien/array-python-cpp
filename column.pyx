@@ -6,7 +6,6 @@
 #
 from libcpp.string cimport string
 from libcpp.vector cimport vector
-from libcpp.map cimport map
 import numpy as np
 cimport numpy as np
 

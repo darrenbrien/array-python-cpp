@@ -14,6 +14,7 @@ def run(connString, mem0, proc):
 		mem1 = proc.memory_info().rss
 		R1 = PyQuery()
 		df = R1.get_cols(connString)
+		print(df.memory_usage().sum() / 1024**2)
 		del df
 		gc.collect()
 		mem2 = proc.memory_info().rss
@@ -23,7 +24,7 @@ def run(connString, mem0, proc):
 	return doRun
 
 results = sys.argv[1] if len(sys.argv) > 1 else 10
-connString = {'query' : 'select * from dfs.flights.flights_by_year limit {}'.format(results), 
+connString = {'query' : 'select * from dfs.flights.flights_by_yr limit {}'.format(results), 
 	      'type': 'sql', 
 	      'connectStr' : 'local=172.17.0.2:31010',
 	      'api' : 'async',
@@ -36,5 +37,7 @@ for i in range(10):
 	r()
 gc.collect(2)
 df = pd.DataFrame(proc.memory_maps())
+df.set_index('path', inplace=True)
 df.sort_values('rss', inplace=True)
+df = df.apply(lambda c: c/1024**2)
 print(tabulate(df, headers='keys', tablefmt='psql'))

@@ -16,7 +16,7 @@ def run(connString):
 	return doRun
 
 results = sys.argv[1] if len(sys.argv) > 1 else 10
-connString = {'query' : 'select * from dfs.flights.flights_by_year limit {}'.format(results), 
+connString = {'query' : 'select * from dfs.flights.flights_by_yr limit {}'.format(results), 
 	      'type': 'sql', 
 	      'connectStr' : 'local=172.17.0.2:31010',
 	      'api' : 'async',
