@@ -5,7 +5,6 @@ from query import PyQuery
 import pandas as pd
 import numpy as np
 import timeit
-
 def run(connString):
 	def doRun():
 		R1 = PyQuery()
@@ -17,11 +16,11 @@ def run(connString):
 	return doRun
 
 results = sys.argv[1] if len(sys.argv) > 1 else 10
-connString = {'query' : 'select * from dfs.flights.flights_by_yr limit {}'.format(results), 
+connString = {'query' : 'select * from dfs.flights.flights_by_year limit {}'.format(results), 
 	      'type': 'sql', 
 	      'connectStr' : 'local=172.17.0.2:31010',
 	      'api' : 'async',
 	      'logLevel' : 'error'}
-result = timeit.Timer(run(connString)).repeat(repeat=4, number=1)
+result = timeit.Timer(run(connString)).repeat(repeat=10, number=1)
 print("{} runs took {}, min: {}, median:{}, max:{}".format(len(result), sum(result), min(result), np.median(result), max(result))) 
 print(["%.2f"%item for item in result])

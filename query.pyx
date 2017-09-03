@@ -20,6 +20,7 @@ ctypedef np.uint8_t cBIT
 ctypedef np.int32_t cINT
 ctypedef np.int64_t cBIGINT
 ctypedef np.float64_t cDouble
+ctypedef np.float32_t cFloat
 
 # c++ interface to cython
 cdef extern from "drill/querySubmitter.hpp": 
@@ -51,6 +52,8 @@ cdef to_numpy(ColumnBase* i):
         return create_int32(<Column[cINT]*> i)
     elif t == <int> BIGINT:
         return create_int64(<Column[cBIGINT]*> i) 
+    elif t == <int> FLOAT4:
+        return create_float32(<Column[cFloat]*> i) 
     elif t == <int> FLOAT8:
         return create_float64(<Column[cDouble]*> i) 
     elif t == <int> TIMESTAMP:
@@ -60,6 +63,11 @@ cdef to_numpy(ColumnBase* i):
 
 cdef create_int32(Column[cINT]* col):
     cdef np.ndarray[cINT, ndim=1] data = np.array(<cINT[:col.vec.size()]> &(col.vec[0]), dtype=np.dtype('i4'))
+    col.dispose()
+    return data
+
+cdef create_float32(Column[cFloat]* col):
+    cdef np.ndarray[cFloat, ndim=1] data = np.array(<cFloat[:col.vec.size()]> &(col.vec[0]), dtype=np.dtype('f4'))
     col.dispose()
     return data
 
