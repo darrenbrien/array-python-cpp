@@ -20,7 +20,7 @@ cdef extern from "drill/column.hpp":
         ByteStringColumn(string name, int t)
         int getType()
         string getName()
-        vector[char] vec
+        vector[unsigned char] vec
         vector[size_t] offsets
         vector[size_t] lengths
         void dispose()

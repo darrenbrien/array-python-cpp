@@ -88,11 +88,10 @@ cdef create_string(ByteStringColumn* col):
     cdef np.ndarray[size_t] offsets = np.asarray(<size_t[:col.offsets.size()]> &(col.offsets[0]))
     cdef data = np.empty(col.lengths.size(), dtype='O')
     cdef size_t i
-    cdef unicode c_string = get_c_string(&(col.vec[0]), col.vec.size())
     for i in range(col.lengths.size()):
-        data[i] = c_string[offsets[i]:offsets[i] + lengths[i]]
+        data[i] = get_c_string(&(col.vec[0]) + offsets[i], lengths[i])
     col.dispose()
     return data
 
-cdef unicode get_c_string(char* c_string, size_t length):
-    return c_string[:length].decode('utf-8', 'strict')
+cdef unicode get_c_string(unsigned char* c_string, size_t length):
+    return c_string[:length].decode('ascii', 'ignore')
