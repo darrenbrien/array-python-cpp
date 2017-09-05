@@ -9,14 +9,18 @@ def run(connString):
 	def doRun():
 		R1 = PyQuery()
 		df = R1.get_cols(connString)
-		print(df.head())
-		print(df.shape)
+		#print(df.head())
+		#print(df.shape)
 		del df
 		return 0		
 	return doRun
 
 results = sys.argv[1] if len(sys.argv) > 1 else 10
-connString = {'query' : 'select * from dfs.flights.flights_by_yr limit {}'.format(results), 
+connString = {'query' : "select UniqueCarrier, Origin, Dest, `MONTH`, DayOfWeek from dfs.flights.flights_by_carrier " + 
+			#"where UniqueCarrier = 'AA' " +
+			#"AND `MONTH` = 5 " +
+			#"AND `ORIGIN` = 'LAX' " +
+			"limit {}".format(results), 
 	      'type': 'sql', 
 	      'connectStr' : 'local=172.17.0.2:31010',
 	      'api' : 'async',

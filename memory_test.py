@@ -15,7 +15,6 @@ def run(connString, mem0, proc):
 		R1 = PyQuery()
 		df = R1.get_cols(connString)
 		print(df.memory_usage().sum() / 1024**2)
-		del df
 		gc.collect()
 		mem2 = proc.memory_info().rss
 		pd = lambda x2, x1: 100.0 * (x2 - x1) / mem0
