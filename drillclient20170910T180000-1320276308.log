@@ -1,0 +1,6 @@
+Drill Client Library
+Build info:
+Current process id is: 28
+Initialized Logging to file (./drillclient20170910T180000.log). 
+2017-Sep-10 18:00:00 : INFO    : 7f6369095700 : Connected to endpoint: id: 60 address: 172.17.0.2:31010
+2017-Sep-10 18:00:00 : INFO    : 7f6369095700 : schema:dfs.flights
