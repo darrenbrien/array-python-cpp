@@ -3,5 +3,7 @@ build/
 *.html
 *.swp
 *.so
+*.log
+.ipynb_checkpoints/
 column.cpp
 query.cpp
